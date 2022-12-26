@@ -48,5 +48,5 @@ The script takes input from four sources, in order:
 
 # More info
 
-A discussion thread about this script will be created shortly in the [Bogleheads Non-US Investing forum](https://www.bogleheads.org/forum/viewforum.php?f=22).
+A [discussion thread](https://www.bogleheads.org/forum/viewtopic.php?t=393286) about this script has been created in the Bogleheads [Non-US Investing forum](https://www.bogleheads.org/forum/viewforum.php?f=22).
 
