@@ -787,7 +787,7 @@ def mediawiki_escape(s):
 
 def reformat_date_from_ddmmyyyy_to_ddmmmyyyy(date_string):
 	try:
-		return datetime.strptime(date_string, '%d/%m/%Y').strftime('%d %b %Y')
+		return datetime.datetime.strptime(date_string, '%d/%m/%Y').strftime('%d %b %Y')
 	except:
 		_LOGGER_.debug('couldn\'t reformat date: %s' % date_string)
 		return date_string
@@ -800,7 +800,7 @@ def write_wiki_output_to_filehandle(funds, f):
 		for fund in funds:
 			if fund.category == category:
 				f.write('|-\n| ' + ' || '.join([
-					'[%s](http://etf.com/%s)' % (fund.ticker, fund.ticker),
+					'[https://etf.com/%s %s]' % (fund.ticker, fund.ticker),
 					mediawiki_escape(fund.family),
 					mediawiki_escape(fund.fund_name),
 					fund.isin,
