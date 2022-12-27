@@ -7,5 +7,6 @@ D0115-0026,,,25434V740,Dimensional Emerging Markets Value ETF: incorrect ISIN in
 D0115-0028,,,25434V724,Dimensional US Marketwide Value ETF: incorrect ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/dfuv/us-marketwide-value-etf - retrieved 24 Dec 2022.
 G0080-0005,,US37960A6698,,Global X SuperDividend ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/sdiv/ - retrieved 24 Dec 2022.
 G0080-0010,,US37954Y3190,,Global X MSCI Greece ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/GREK/ - retrieved 24 Dec 2022
+V0015-0001,Vanguard FTSE Developed Markets ETF,,,"No ISIN/CUSIP problems, but sub fund name was long and included the words “Tax-Managed” - fund prospectus doesn’t mention taxes outside the usual boilerplate language."
 V0016-0009,Vanguard Mid-Cap Index Fund,,,"No ISIN/CUSIP problems, but sub fund name was a bit garbled: “Vanguard Mid-Cap Index Fund Vanguard Mid-Cap ETF”."
 V0046-0033,,US92189H6071,,VanEck Oil Services ETF: mangled ISIN in HMRC sheet.  Source: https://www.vaneck.com/us/en/investments/oil-services-etf-oih/ - retrieved 24 Dec 2022.

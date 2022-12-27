@@ -9,7 +9,7 @@ This is a topic of specialist interest to some DIY investors on the [Bogleheads&
 
 (This script is run from the command prompt.  If you're not knowledgeable about running tools from the command prompt, you'll struggle with what follows.)
 
-You'll need Python 3 installed.  (To check if you do: open a command prompt and type "python3 --version"; you should then see a brief message giving a version number starting with a 3, and not an earlier verison number or an error complaining that the command was not found.)  If you don't have Python 3 installed, go download it from [the official Python site](https://www.python.org/downloads/).  This script was developed under Python 3.10, but any recent version ought to suffice.
+You'll need Python 3 installed.  (To check if you do: open a command prompt and type `python3 --version`; you should then see a brief message giving a version number starting with a 3, and not an earlier verison number or an error complaining that the command was not found.)  If you don't have Python 3 installed, go download it from [the official Python site](https://www.python.org/downloads/).  This script was developed under Python 3.10, but any recent version ought to suffice.
 
 You'll also need some extra Python modules installed. The [`requirements.txt`](requirements.txt) file in the same directory as the script lists these modules, and can be used to help install them - from a command prompt in the same directory as the script, type: `pip3 install -r requirements.txt`  (If you're on Linux or MacOS, you may need to type `sudo pip3 install -r requirements.txt` instead.)
 
@@ -43,7 +43,7 @@ The script takes input from four sources, in order:
   * A list of fund families
     * The HMRC data file contains a column called "Parent Fund Name", which contains something like the fund family name, and another column called "Sub Fund Name", which contains something like the individual ETF name.  Problem is, the parenet fund name is generally the name of a legal entity (like "Vanguard Charlotte Funds"), of which there may be several per fund company, rather than simply a fund brand name most people would recognize (for example, "Vanguard").  Additionally, the sub fund name may have additional rubbish at the beginning (repeating the fund family name) or the end (the name of a share class).
     * To aid in cleaning up this data, the script uses a list of fund family names - these are read from a text file, one per line.  If a parent fund name begins with one of the fund family names from this file, the script uses the corresponding entry from the fund family names file as the fund family name, rather than the (usually longer) legal entity name from the HMRC sheet.  This is then helps to drive the rules which clean up the individual fund name (if the fund name begins with the fund family name, it is removed).
-    * By default the fund families list used is [`fund-families.csv`](fund-families.csv) in the same directory as the script; the version of this file in the repository contains an entry for all US ETF fund families which as of this writing have UK-reporting ETFs. 
+    * By default the fund families list used is [`fund-families.txt`](fund-families.txt) in the same directory as the script; the version of this file in the repository contains an entry for all US ETF fund families which as of this writing have UK-reporting ETFs. 
 
 
 # More info

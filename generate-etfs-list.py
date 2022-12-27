@@ -55,7 +55,7 @@ OPENFIGI_JOBS_PER_CALL_WITH_KEY = 100
 DEFAULT_ERRATA_FILE_NAME = 'errata.csv'
 '''Default name of the errata file used to correct errors in HMRC data.'''
 
-DEFAULT_FAMILY_FILE_NAME = 'fund-families.csv'
+DEFAULT_FAMILY_FILE_NAME = 'fund-families.txt'
 '''Default name of the file containing fund family names.'''
 
 DEFAULT_CATEGORY_FILE_NAME = 'fund-categories.csv'
@@ -796,14 +796,14 @@ def write_wiki_output_to_filehandle(funds, f):
 	for category in sorted(set(map(lambda f: f.category, funds))):
 		f.write('=== %s ===\n' % mediawiki_escape(category))
 		f.write('{| class="wikitable sortable mw-datatable"\n')
-		f.write('! Ticker || Fund Family || Fund Name || ISIN || HMRC Reporting Since\n')
+		f.write('! Ticker || Fund Family || Fund Name || CUSIP || HMRC Reporting Since\n')
 		for fund in funds:
 			if fund.category == category:
 				f.write('|-\n| ' + ' || '.join([
 					'[https://etf.com/%s %s]' % (fund.ticker, fund.ticker),
 					mediawiki_escape(fund.family),
 					mediawiki_escape(fund.fund_name),
-					fund.isin,
+					'<span title="ISIN: %s">%s</span>' % (fund.isin, fund.isin[2:11]),
 					reformat_date_from_ddmmyyyy_to_ddmmmyyyy(fund.from_date)
 				]) + '\n')
 		f.write('|}\n\n')
