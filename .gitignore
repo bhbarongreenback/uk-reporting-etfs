@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# entries specific to this repository...
+# HMRC sheet cache
+hmrc_sheet.xlsm
+# OpenFIGI result cache
+openfigi.json
+# output files
+wiki.txt
+wiki-misc.txt
+ 
