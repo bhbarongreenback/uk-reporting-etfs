@@ -1,15 +1,15 @@
 ISIN,Category
-US4642872265,Fixed Income: United States
+US4642872265,Fixed income: United States
 US33738R7044,
 US53656F7895,
 US33733E8497,
 US33733H1077,
-US9219378190,Fixed Income: United States
-US9219377937,Fixed Income: United States
-US9219378356,Fixed Income: United States
-US92203J4076,Fixed Income: Global/Non-US
+US9219378190,Fixed income: United States
+US9219377937,Fixed income: United States
+US9219378356,Fixed income: United States
+US92203J4076,Fixed income: global/non-US
 US37954Y7159,
-US9219378273,Fixed Income: United States
+US9219378273,Fixed income: United States
 US33740U7037,
 US33740U7524,
 US33740F7556,
@@ -19,38 +19,38 @@ US37954Y8306,
 US33740F5402,
 US33738R6962,
 US33740U1097,
-US25434V7579,Equities: Global/Non-US
+US25434V7579,Equities: global/non-US
 US97717W3152,
 US25434V7082,Equities: United States
-US25434V3024,Equities: Global/Non-US
-US25434V2034,Equities: Global/Non-US
-US25434V8239,Real Estate
+US25434V3024,Equities: global/non-US
+US25434V2034,Equities: global/non-US
+US25434V8239,Real estate
 US25434V5003,Equities: United States
 US25434V6092,Equities: United States
 US25434V1044,Equities: United States
-US25434V8809,Equities: Global/Non-US
-US25434V8726,Fixed Income: Global/Non-US
-US25434V7322,Equities: Global/Non-US
-US25434V7405,Equities: Global/Non-US
-US25434V7991,Equities: Global/Non-US
-US25434V8569,Fixed Income: United States
-US25434V7736,Equities: Global/Non-US
-US25434V8072,Equities: Global/Non-US
-US25434V8494,Fixed Income: United States
-US25434V8643,Fixed Income: Global/Non-US
+US25434V8809,Equities: global/non-US
+US25434V8726,Fixed income: global/non-US
+US25434V7322,Equities: global/non-US
+US25434V7405,Equities: global/non-US
+US25434V7991,Equities: global/non-US
+US25434V8569,Fixed income: United States
+US25434V7736,Equities: global/non-US
+US25434V8072,Equities: global/non-US
+US25434V8494,Fixed income: United States
+US25434V8643,Fixed income: global/non-US
 US25434V8155,Equities: United States
 US25434V4014,Equities: United States
 US25434V7249,Equities: United States
 US97717W2816,
-US25434V7652,Equities: Global/Non-US
-US25434V7819,Equities: Global/Non-US
+US25434V7652,Equities: global/non-US
+US25434V7819,Equities: global/non-US
 US37950E2919,
 US25434V8312,Equities: United States
 US97717W8516,
 US97717W5215,
 US33738D7057,
 US33733A2015,
-US9219107094,Fixed Income: United States
+US9219107094,Fixed income: United States
 US33740U6047,
 US92189H3003,
 US33738D1019,
@@ -140,7 +140,7 @@ US37950E3412,
 US97717X7012,
 US92189H4092,
 US33738D4088,
-US46432F8427,Equities: Global/Non-US
+US46432F8427,Equities: global/non-US
 US33738R8869,
 US33733E8562,
 US92189F4458,
@@ -157,7 +157,7 @@ US4642876894,Equities: United States
 US33739Q7051,
 US5007676787,
 US33741X2018,
-US4642865178,Fixed Income: Global/Non-US
+US4642865178,Fixed income: global/non-US
 US33738D6067,
 US37954Y8553,
 US33739Q2003,
@@ -196,28 +196,28 @@ US0032641088,
 US33734X1928,
 US92189F6768,
 US25460E8690,
-US46429B7477,Fixed Income: United States
+US46429B7477,Fixed income: United States
 US33738R1187,
 US33740F8885,
 US37954Y8710,
-US46435U8532,Fixed Income: United States
+US46435U8532,Fixed income: United States
 US92204A8018,
 US9229087518,Equities: United States
 US9229085959,Equities: United States
 US9229086114,Equities: United States
-US92206C8709,Fixed Income: United States
-US92206C8139,Fixed Income: United States
+US92206C8709,Fixed income: United States
+US92206C8139,Fixed income: United States
 US92204A1088,
-US92206C4096,Fixed Income: United States
+US92206C4096,Fixed income: United States
 US92204A2078,
 US92204A3068,
-US9219438580,Equities: Global/Non-US
-US9220427754,Equities: Global/Non-US
+US9219438580,Equities: global/non-US
+US9220427754,Equities: global/non-US
 US92204A4058,
-US92206C7065,Fixed Income: United States
-US9220428745,Equities: Global/Non-US
-US92206C8477,Fixed Income: United States
-US92206C1027,Fixed Income: United States
+US92206C7065,Fixed income: United States
+US9220428745,Equities: global/non-US
+US92206C8477,Fixed income: United States
+US92206C1027,Fixed income: United States
 US92204A7028,
 US92204A5048,
 US9219088443,Equities: United States
@@ -225,10 +225,10 @@ US9219327940,Equities: United States
 US9219328286,Equities: United States
 US9219327783,Equities: United States
 US92204A6038,
-US92206C7719,Fixed Income: United States
+US92206C7719,Fixed income: United States
 US92189F8178,
-US9229085538,Real Estate
-US9220426764,Real Estate
+US9229085538,Real estate
+US9220426764,Real estate
 US9229086296,Equities: United States
 US9229085124,Equities: United States
 US92206C7305,Equities: United States
@@ -239,10 +239,10 @@ US9219325050,Equities: United States
 US9219327031,Equities: United States
 US9229085389,Equities: United States
 US92204A8844,
-US9220428661,Equities: Global/Non-US
+US9220428661,Equities: global/non-US
 US92204A8760,
-US9220427184,Equities: Global/Non-US
-US9220427424,Equities: Global/Non-US
+US9220427184,Equities: global/non-US
+US9220427424,Equities: global/non-US
 US92206C5994,Equities: United States
 US9229087690,Equities: United States
 US9229087443,Equities: United States
@@ -251,11 +251,11 @@ US92206C6646,Equities: United States
 US92206C6497,Equities: United States
 US9229087369,Equities: United States
 US9229086379,Equities: United States
-US9220428588,Equities: Global/Non-US
-US9219468850,Fixed Income: Global/Non-US
+US9220428588,Equities: global/non-US
+US9219468850,Fixed income: global/non-US
 US9229086528,Equities: United States
-US9219097683,Equities: Global/Non-US
+US9219097683,Equities: global/non-US
 US9219464065,Equities: United States
-US09789C7882,Fixed Income: United States
-US09789C8617,Fixed Income: United States
+US09789C7882,Fixed income: United States
+US09789C8617,Fixed income: United States
 US33740U8514,
