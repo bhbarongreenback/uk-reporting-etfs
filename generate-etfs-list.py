@@ -793,8 +793,12 @@ def reformat_date_from_ddmmyyyy_to_ddmmmyyyy(date_string):
 		return date_string
 
 def write_wiki_output_to_filehandle(funds, f):
+	is_first_table = True
 	for category in sorted(set(map(lambda f: f.category, funds))):
 		f.write('=== %s ===\n' % mediawiki_escape(category))
+		if is_first_table:
+			f.write('{{mw-datatable}}\n')
+			is_first_table = False
 		f.write('{| class="wikitable sortable mw-datatable"\n')
 		f.write('! Ticker || Fund Family || Fund Name || CUSIP || HMRC Reporting Since\n')
 		for fund in funds:
