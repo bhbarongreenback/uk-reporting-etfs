@@ -650,24 +650,24 @@ def read_families_file(families_filename):
 def read_categories_file(categories_filename):
 	'''
 	Read in the fund categories file (a CSV file consisting of a header
-	row telling which is the ISIN column and which is the category column,
-	followed by data rows).  Returns a dictionary of ISINs to categories.
+	row telling which is the CUSIP column and which is the category column,
+	followed by data rows).  Returns a dictionary of CUSIPs to categories.
 	'''
 	_LOGGER_.info('reading fund categories from %s' % categories_filename)
 	result = dict()
 	with open(categories_filename,'r') as f:
 		csv_in = csv.reader(f)
 		header_row = next(csv_in)
-		isin_column = column_matching(header_row, r'\bISIN\b')
+		cusip_column = column_matching(header_row, r'\bCUSIP\b')
 		category_column = column_matching(header_row, r'\bcategory\b')
-		if isin_column is None or category_column is None:
-			raise Exception('categories file needs an "ISIN" column and a "Category" column')
+		if cusip_column is None or category_column is None:
+			raise Exception('categories file needs a "CUSIP" column and a "Category" column')
 		for row in csv_in:
-			isin = row[isin_column]
-			if not isin:
+			cusip = row[cusip_column]
+			if not cusip:
 				continue
 			category = row[category_column]
-			result[isin] = category
+			result[cusip] = category
 	_LOGGER_.info('category data for %d funds read' % len(result))
 	return result
 
@@ -722,17 +722,17 @@ def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
 		m = family_regex.match(fund.family)
 		if m:
 			fund.family = m.group(1)
-		# Look up the category of the fund using the ISIN
-		if fund.isin not in fund_categories:
-			# If the ISIN doesn't appear in the categories file, add the
+		# Look up the category of the fund using the CUSIP
+		if fund.isin[2:11] not in fund_categories:
+			# If the CUSIP doesn't appear in the categories file, add the
 			# fund to the list of uncategorized funds, and ignore it
 			uncategorized_funds.append(fund)
 			continue
-		elif not fund_categories[fund.isin]:
-			# Ignore the fund if ISIN is in the file but category is blank
+		elif not fund_categories[fund.isin[2:11]]:
+			# Ignore the fund if CUSIP is in the file but category is blank
 			continue
 		else:
-			fund.category = fund_categories[fund.isin]
+			fund.category = fund_categories[fund.isin[2:11]]
 		# Finally, clean up the fund name following a few rules...
 		# Strip the fund family name from the start of the fund name
 		fund.fund_name = re.sub('^'+re.escape(fund.family)+r'\s+','',fund.fund_name, re.I)
@@ -745,7 +745,7 @@ def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
 	if uncategorized_funds:
 		_LOGGER_.error('%d uncategorzed fund(s) detected: %s' % (
 				len(uncategorized_funds),
-				', '.join(map(lambda x: x.ticker, uncategorized_funds))))
+				', '.join(map(lambda x: "%s (%s)" % (x.ticker, x.isin[2:11]), uncategorized_funds))))
 		_LOGGER_.debug('uncategorized fund detail: %r' % uncategorized_funds)
 		if not no_die_on_uncategorized_funds:
 			sys.exit(1)
@@ -794,7 +794,7 @@ def reformat_date_from_ddmmyyyy_to_ddmmmyyyy(date_string):
 
 def write_wiki_output_to_filehandle(funds, f):
 	is_first_table = True
-	for category in sorted(set(map(lambda f: f.category, funds))):
+	for category in sorted(set(map(lambda f: f.category, funds)), key=str.lower):
 		f.write('=== %s ===\n' % mediawiki_escape(category))
 		if is_first_table:
 			f.write('{{mw-datatable}}\n')
