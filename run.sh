@@ -38,7 +38,7 @@ echo
 # the funds excluded from the main list
 TMP_CATEGORIES=/tmp/fund-categories-$$.csv
 rm -f ${TMP_CATEGORIES}
-perl -pe 's/^([^,]+),?(\s*?)$/\1,Miscellaneous\2/;s/,(?!Misc)(?!Category).*?(\s*$)/,\1/' \
+perl -pe 's/^([^,]+),?(\s*?)$/\1,Excluded funds\2/;s/,(?!Excluded)(?!Category).*?(\s*$)/,\1/' \
 	< fund-categories.csv > ${TMP_CATEGORIES}
 
 # generate the "spillover list" of funds not in the main list,
