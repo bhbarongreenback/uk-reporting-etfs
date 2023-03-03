@@ -36,10 +36,10 @@ echo
 
 # generate an "inverse categories file" containing only
 # the funds excluded from the main list
-TMP_CATEGORIES=/tmp/fund-categories-$$.csv
-rm -f ${TMP_CATEGORIES}
+TMP_CATEGORIES="${TMPDIR:-/tmp}/fund-categories-$$.csv"
+rm -f "${TMP_CATEGORIES}"
 perl -pe 's/^([^,]+),?(\s*?)$/\1,Excluded funds\2/;s/,(?!Excluded)(?!Category).*?(\s*$)/,\1/' \
-	< fund-categories.csv > ${TMP_CATEGORIES}
+	< fund-categories.csv > "${TMP_CATEGORIES}"
 
 # generate the "spillover list" of funds not in the main list,
 # using the cache files to avoid repeating major HTTP calls 
@@ -48,11 +48,11 @@ echo '#### generating spillover fund list'
 	--verbose \
 	--hmrc-sheet=${HMRC_SHEET_CACHE} \
 	--openfigi-cache=${OPENFIGI_CACHE} \
-	-c ${TMP_CATEGORIES} \
+	-c "${TMP_CATEGORIES}" \
 	-w wiki-misc.txt
 echo
 
-rm -f ${TMP_CATEGORIES}
+rm -f "${TMP_CATEGORIES}"
 
 # print out differences with previous version of output
 OLD_MAIN_LIST="$(ls -t wiki.txt.* 2>/dev/null | head -n 1)" 
