@@ -85,6 +85,7 @@ CUSIP,Category
 33734X192,
 33734X200,
 33734X309,
+33734X754,
 33734X770,
 33734X788,
 33734X812,
@@ -223,6 +224,7 @@ CUSIP,Category
 464287614,Equities: United States
 464287689,Equities: United States
 464287804,Equities: United States
+464288158,Fixed income: United States
 46429B747,Fixed income: United States
 46432F842,Equities: global/non-US
 46434G848,
@@ -237,6 +239,7 @@ CUSIP,Category
 92189F445,Fixed income: global/non-US
 92189F643,
 92189F676,
+92189F692,
 92189F700,
 92189F767,
 92189F791,
