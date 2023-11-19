@@ -22,7 +22,11 @@ CUSIP,Category
 25434V302,Equities: global/non-US
 25434V401,Equities: United States
 25434V500,Equities: United States
+25434V591,Fixed income: United States
 25434V609,Equities: United States
+25434V617,Equities: global/non-US
+25434V625,Equities: United States
+25434V633,Fixed income: United States
 25434V658,Real estate
 25434V666,Equities: United States
 25434V674,Fixed income: global/non-US
@@ -150,6 +154,7 @@ CUSIP,Category
 33739Q408,
 33739Q507,
 33739Q705,
+33739Q804,
 33740F490,
 33740F540,
 33740F557,
@@ -204,6 +209,7 @@ CUSIP,Category
 37960A669,
 41151J109,
 41151J208,
+46090A721,
 46137V282,
 46137V357,
 46138E354,
