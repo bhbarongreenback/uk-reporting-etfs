@@ -16,10 +16,7 @@ https://github.com/bhbarongreenback/uk-reporting-etfs
 import argparse, contextlib, csv, dataclasses, datetime, io, \
 		itertools, json, logging, os, re, sys, time, urllib
 
-# non-standard packages
-# (install these with "apt-get install python3-openpyxl python3-mechanize"
-# on Debian/Ubuntu, or "pip3 install openpyxl mechanize" elsewhere)
-import openpyxl
+# apt-get install python3-mechanize || pip3 install mechanize
 import mechanize
 
 
@@ -227,12 +224,12 @@ def get_hmrc_spreadsheet_url(hmrc_page_url):
 	'''
 	Load and parse a page from the HMRC website to get the URL of the
 	current spreadsheet of UK reporting funds.  (This is presumed to be
-	the first link on the page with a URL having an .xlsx or .xlsm
+	the first link on the page with a URL having an .xlsm, .xlsx or .ods
 	extension.)
 	'''
 	with contextlib.closing(mechanize.Browser()) as br:
 		br.open(hmrc_page_url)
-		return br.find_link(url_regex=re.compile('''\.xls[mx]$''')).url
+		return br.find_link(url_regex=re.compile('''\.(?:xls[mx]|ods)$''')).url
 
 
 def is_blank(x):
@@ -248,12 +245,12 @@ def read_hmrc_sheet(hmrc_sheet, no_download_hmrc_sheet, hmrc_page):
 	if no_download_hmrc_sheet:
 		_LOGGER_.info('reading HMRC spreadsheet from file %s' % hmrc_sheet)
 		with open(hmrc_sheet,'rb') as f:
-			return io.BytesIO(f.read())
+			return (None, hmrc_sheet)
 	else:
 		_LOGGER_.info('reading HMRC webpage from %s' % hmrc_page)
 		hmrc_sheet_url = get_hmrc_spreadsheet_url(hmrc_page)
 		headers = dict()
-		if os.path.exists(hmrc_sheet):
+		if hmrc_sheet and os.path.exists(hmrc_sheet):
 			headers['If-Modified-Since'] = time.strftime(
 				'%a, %d %b %Y %H:%M:%S GMT', 
 				time.gmtime(os.path.getmtime(hmrc_sheet)))
@@ -266,12 +263,15 @@ def read_hmrc_sheet(hmrc_sheet, no_download_hmrc_sheet, hmrc_page):
 					_LOGGER_.info('saving cached spreadsheet to %s' % hmrc_sheet)
 					with open(hmrc_sheet,'wb') as f:
 						f.write(hmrc_sheet_raw)
-				return io.BytesIO(hmrc_sheet_raw)
+					return (None, hmrc_sheet)
+				else:
+					# TODO: broken for ODS - bug in odfpy?
+					return (io.BytesIO(hmrc_sheet_raw), hmrc_sheet_url)
 		except urllib.error.HTTPError as e:
-			if e.code == 304:
+			if e.code == 304 and hmrc_sheet:
 				_LOGGER_.info('using cached spreadsheet at %s' % hmrc_sheet)
 				with open(hmrc_sheet,'rb') as f:
-					return io.BytesIO(f.read())
+					return (None, hmrc_sheet)
 			raise e
 
 
@@ -337,14 +337,15 @@ def isin_check_digit(s):
 
 def sheet_to_fund_info(hmrc_sheet, errata):
 	'''
-	Given an openpyxl (Excel) worksheet, return a FundInfo object
+	Given rows from the HMRC worksheet, return a FundInfo object
 	for each "interesting-looking" row in the sheet (i.e. those having
 	a valid CUSIP and/or US ISIN), applying any corrections from the
 	errata before performing any processing.
 	'''
+	_LOGGER_.info('start processsing HMRC spreadsheet contents')
 	parent_column = sub_column = isin_column = cusip_column = from_column = to_column = ref_column = None
+	fund_count = 0
 	for row in hmrc_sheet:
-		row = list(map(lambda x: x.value, row))
 		# If we haven't encountered the header row yet, try to match it -
 		# in the process figuring out which column each of the data items is in
 		if parent_column is None or sub_column is None \
@@ -359,14 +360,15 @@ def sheet_to_fund_info(hmrc_sheet, errata):
 			to_column = column_matching(row, r'\bceased\b')
 			ref_column = column_matching(row, r'\bshare\s+class\s+ref')
 			continue
+
 		# Get data values from the various columns
-		family = row[parent_column]
-		fund_name = row[sub_column]
-		isin = row[isin_column]
-		cusip = row[cusip_column]
-		from_date = row[from_column]
-		to_date = row[to_column]
-		share_class_ref = row[ref_column]
+		family = row[parent_column] if len(row) > parent_column else None
+		fund_name = row[sub_column] if len(row) > sub_column else None
+		isin = row[isin_column] if len(row) > isin_column else None
+		cusip = row[cusip_column] if len(row) > cusip_column else None
+		from_date = row[from_column] if len(row) > from_column else None
+		to_date = row[to_column] if len(row) > to_column else None
+		share_class_ref = row[ref_column] if len(row) > ref_column else None
 		# If the fund is mentioned in the errata file, override data in
 		# the HMRC sheet with any non-blank values from the errata file
 		if share_class_ref in errata:
@@ -423,21 +425,50 @@ def sheet_to_fund_info(hmrc_sheet, errata):
 			# fund has a date where it ceased to be a UK reporting fund - row doesn't interest us then
 			continue
 		yield fund
+		fund_count += 1
+	_LOGGER_.info('finish processsing HMRC spreadsheet contents (%d candidates found)' % fund_count)
 
 
-def parse_hmrc_sheet(hmrc_sheet_raw, errata):
+def odfpy_cell_to_text(cell):
+	# thanks, https://github.com/marcoconti83/read-ods-with-odfpy/blob/master/ODSReader.py#L63
+	import odf.text
+	ps = cell.getElementsByType(odf.text.P)
+	text_content = ""
+	for p in ps:
+		for n in p.childNodes:
+			if (n.nodeType == 1 and ((n.tagName == "text:span") or (n.tagName == "text:a"))):
+				for c in n.childNodes:
+					if (c.nodeType == 3):
+						text_content = u'{}{}'.format(text_content, c.data)
+			if (n.nodeType == 3):
+				text_content = u'{}{}'.format(text_content, n.data)
+	return text_content.strip() if re.search(r'\w', text_content) else ''
+
+
+def parse_hmrc_sheet(hmrc_sheet_raw, filename):
 	'''
-	Given a file-like object from which we can read the HMRC Excel sheet,
-	and the contents of the errata file (if any), return a list of FundInfo
-	objects containing info about possible US ETFs. 
+	Given a file-like object from which we can read the HMRC data file,
+	generate a series of rows from the first sheet in the workbook.
 	'''
-	_LOGGER_.info('start parsing HMRC spreadsheet')
-	with contextlib.closing(openpyxl.load_workbook(filename=hmrc_sheet_raw, read_only=True)) as wb:
+	if re.match(r'^(?:.*/)?[^/]+\.xls[mx](?:\b[^/]+)?$', filename):
+		# apt-get install python3-openpyxl || pip3 install openpyxl
+		import openpyxl
+		_LOGGER_.info('start parsing HMRC spreadsheet (using openpyxl)')
+		with contextlib.closing(openpyxl.load_workbook(filename=(filename or hmrc_sheet_raw), read_only=True)) as wb:
+			_LOGGER_.info('finish parsing HMRC spreadsheet')
+			for row in wb.worksheets[0]:
+				yield list(map(lambda x: x.value, row))
+	elif re.match(r'^(?:.*/)?[^/]+\.ods(?:\b[^/]+)?$', filename):
+		# apt-get install python3-odf || pip3 install odfpy
+		import odf.opendocument, odf.table
+		_LOGGER_.info('start parsing HMRC spreadsheet (using odfpy)')
+		doc = odf.opendocument.load(filename)
 		_LOGGER_.info('finish parsing HMRC spreadsheet')
-		_LOGGER_.info('start processsing HMRC spreadsheet contents')
-		funds = tuple(sheet_to_fund_info(wb.worksheets[0], errata))
-		_LOGGER_.info('finish processsing HMRC spreadsheet contents (%d candidates found)' % len(funds))
-		return funds
+		tbl = doc.spreadsheet.getElementsByType(odf.table.Table)[0]
+		for row in tbl.getElementsByType(odf.table.TableRow):
+			yield list(map(odfpy_cell_to_text, row.getElementsByType(odf.table.TableCell)))
+	else:
+		raise Exception('cannot determine file format from filename: ' + filename)
 
 
 def make_isin_from_cusip(cusip):
@@ -821,10 +852,11 @@ if __name__ == '__main__':
 	configure_logger(args.quiet, args.verbose, args.log_file)
 	errata = read_errata_file(args.errata, args.no_errata_file)
 
-	with read_hmrc_sheet(args.hmrc_sheet, 
+	(hmrc_sheet_io, hmrc_sheet_filename) = read_hmrc_sheet(args.hmrc_sheet, 
 			args.no_download_hmrc_sheet,
-			args.hmrc_page) as hmrc_sheet_raw:
-		fund_info = parse_hmrc_sheet(hmrc_sheet_raw, errata)
+			args.hmrc_page)
+	sheet_rows = parse_hmrc_sheet(hmrc_sheet_io, hmrc_sheet_filename)
+	fund_info = list(sheet_to_fund_info(sheet_rows, errata))
 
 	isin_to_openfigi_result = get_openfigi_results(fund_info,
 			args.openfigi_cache,

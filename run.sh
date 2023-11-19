@@ -9,7 +9,7 @@
 
 set -e
 
-HMRC_SHEET_CACHE=hmrc_sheet.xlsm
+HMRC_SHEET_CACHE=hmrc_sheet.ods
 OPENFIGI_CACHE=openfigi.json
 
 # move out of the way any old output files,
@@ -27,7 +27,7 @@ echo
 # generate the main list of funds, saving the HMRC sheet and
 # OpenFIGI query results to local cache files
 echo '#### generating main fund list'
-./generate-etfs-list.py \
+./generate_etfs_list.py \
 	--verbose \
 	--hmrc-sheet=${HMRC_SHEET_CACHE} \
 	--openfigi-cache=${OPENFIGI_CACHE} \
@@ -44,7 +44,7 @@ perl -pe 's/^([^,]+),?(\s*?)$/\1,Excluded funds\2/;s/,(?!Excluded)(?!Category).*
 # generate the "spillover list" of funds not in the main list,
 # using the cache files to avoid repeating major HTTP calls 
 echo '#### generating spillover fund list'
-./generate-etfs-list.py \
+./generate_etfs_list.py \
 	--verbose \
 	--hmrc-sheet=${HMRC_SHEET_CACHE} \
 	--openfigi-cache=${OPENFIGI_CACHE} \
@@ -55,7 +55,7 @@ echo
 rm -f "${TMP_CATEGORIES}"
 
 # print out differences with previous version of output
-OLD_MAIN_LIST="$(ls -t wiki.txt.* 2>/dev/null | head -n 1)" 
+OLD_MAIN_LIST="$(ls -t wiki.txt.* 2>/dev/null | head -n 1)"
 if [[ -e "${OLD_MAIN_LIST}" ]]
 then
 	echo '#### main fund list - difference with previous version'
