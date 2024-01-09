@@ -132,6 +132,7 @@ dmypy.json
 # entries specific to this repository...
 # HMRC sheet cache
 hmrc_sheet.xlsm*
+hmrc_sheet.ods*
 # OpenFIGI result cache
 openfigi.json*
 # output files
