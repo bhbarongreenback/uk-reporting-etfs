@@ -774,7 +774,7 @@ def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
 		result.append(fund)
 	_LOGGER_.info('finished enhancing fund data (%d funds enhanced)' % len(result))
 	if uncategorized_funds:
-		_LOGGER_.error('%d uncategorzed fund(s) detected: %s' % (
+		_LOGGER_.error('%d uncategorized fund(s) detected: %s' % (
 				len(uncategorized_funds),
 				', '.join(map(lambda x: "%s (%s)" % (x.ticker, x.isin[2:11]), uncategorized_funds))))
 		_LOGGER_.debug('uncategorized fund detail: %r' % uncategorized_funds)
