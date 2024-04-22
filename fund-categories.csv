@@ -11,6 +11,7 @@ CUSIP,Category
 025072299,Equities: global/non-US
 025072315,Equities: global/non-US
 025072604,Equities: global/non-US
+025072687,Fixed income: global/non-US
 025072703,Equities: global/non-US
 025072877,Equities: United States
 025072885,Equities: United States
@@ -22,11 +23,14 @@ CUSIP,Category
 25434V302,Equities: global/non-US
 25434V401,Equities: United States
 25434V500,Equities: United States
+25434V567,Fixed income: global/non-US
+25434V583,Fixed income: global/non-US
 25434V591,Fixed income: United States
 25434V609,Equities: United States
 25434V617,Equities: global/non-US
 25434V625,Equities: United States
 25434V633,Fixed income: United States
+25434V641,Equities: United States
 25434V658,Real estate
 25434V666,Equities: United States
 25434V674,Fixed income: global/non-US
@@ -236,6 +240,7 @@ CUSIP,Category
 464287689,Equities: United States
 464287804,Equities: United States
 464288158,Fixed income: United States
+464288646,Fixed income: United States
 464288679,Fixed income: United States
 46429B747,Fixed income: United States
 46432F842,Equities: global/non-US
