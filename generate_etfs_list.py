@@ -229,7 +229,7 @@ def get_hmrc_spreadsheet_url(hmrc_page_url):
 	'''
 	with contextlib.closing(mechanize.Browser()) as br:
 		br.open(hmrc_page_url)
-		return br.find_link(url_regex=re.compile('''\.(?:xls[mx]|ods)$''')).url
+		return br.find_link(url_regex=re.compile(r'''\.(?:xls[mx]|ods)$''')).url
 
 
 def is_blank(x):
@@ -328,9 +328,9 @@ def isin_check_digit(s):
 	odds  = ''.join(c for i,c in enumerate(s) if i%2==0)
 	evens = ''.join(c for i,c in enumerate(s) if i%2==1)
 	if len(evens) == len(odds):
-		evens = re.sub('\d', lambda m: str(int(m.group(0))*2), evens)
+		evens = re.sub(r'\d', lambda m: str(int(m.group(0))*2), evens)
 	else:
-		odds = re.sub('\d', lambda m: str(int(m.group(0))*2), odds)
+		odds = re.sub(r'\d', lambda m: str(int(m.group(0))*2), odds)
 	x = sum(int(c) for c in (evens + odds))
 	return str((10 - (x % 10)) % 10)
 
