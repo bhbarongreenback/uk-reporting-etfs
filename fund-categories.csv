@@ -5,6 +5,7 @@ CUSIP,Category
 003264108,
 00326A104,Gold
 00774Q197,
+00775Y322,
 00775Y355,
 00775Y710,
 00775Y728,
@@ -85,7 +86,7 @@ CUSIP,Category
 33733H107,
 337344105,
 337345102,
-33734G108,
+33734G108,Real estate
 33734H106,
 33734K109,
 33734X101,
@@ -142,7 +143,11 @@ CUSIP,Category
 33738D408,
 33738D606,
 33738D705,
+33738D754,
 33738D796,
+33738D812,
+33738D820,
+33738D838,
 33738R100,
 33738R118,
 33738R308,
@@ -167,6 +172,7 @@ CUSIP,Category
 33739Q507,
 33739Q705,
 33739Q804,
+33740F276,
 33740F359,
 33740F383,
 33740F490,
@@ -225,6 +231,7 @@ CUSIP,Category
 37954Y871,
 37960A669,
 389637109,
+389638107,
 402031835,
 402031843,
 402031850,
@@ -243,10 +250,14 @@ CUSIP,Category
 46138G706,
 46138G805,Fixed income: United States
 46138G847,
+464286392,Equities: global/non-US
 464286517,Fixed income: global/non-US
 464287200,Equities: United States
 464287226,Fixed income: United States
+464287234,Equities: global/non-US
+464287242,Fixed income: United States
 464287440,Fixed income: United States
+464287457,Fixed income: United States
 464287481,Equities: United States
 464287523,
 464287606,Equities: United States
@@ -254,16 +265,25 @@ CUSIP,Category
 464287622,Equities: United States
 464287655,Equities: United States
 464287689,Equities: United States
+464287739,Real estate
 464287804,Equities: United States
 464288158,Fixed income: United States
+464288182,
+464288489,Real estate
 464288646,Fixed income: United States
+464288661,Fixed income: United States
 464288679,Fixed income: United States
+464288737,
 46429B747,Fixed income: United States
+46432F339,Equities: United States
+46432F388,Equities: United States
 46432F842,Equities: global/non-US
 46434G103,Equities: global/non-US
 46434G764,Equities: global/non-US
 46434G848,
+46434V456,Equities: global/non-US
 46435G334,Equities: global/non-US
+46435G409,Equities: global/non-US
 46435U853,Fixed income: United States
 500767306,
 500767678,
