@@ -16,6 +16,7 @@ Rayliant
 Roundhill
 SPDR
 Sprott
+T. Rowe Price
 VanEck
 Vanguard
 WisdomTree
