@@ -16,7 +16,10 @@ SHEET_EXT      = $(shell $(SED) -e 's/^.*\.//' < build/hmrc-data-url.txt)
 
 all: build/wiki-main.txt build/wiki-secondary.txt diff
 
-build/hmrc-data-page.html:
+build:
+	mkdir -p build
+
+build/hmrc-data-page.html: build
 	###
 	### fetching HMRC data page
 	###
@@ -58,7 +61,7 @@ build/openfigi-data.json: build/hmrc-data.csv bin/call-openfigi.py
 	###
 	$(PYTHON3) bin/call-openfigi.py -v -c -o $@ build/hmrc-data.csv
 
-build/uncategorized-funds.csv: data/fund-categories.csv
+build/uncategorized-funds.csv: data/fund-categories.csv build
 	###
 	### generating "uncategorized funds" list
 	###
@@ -70,25 +73,23 @@ build/wiki-main.txt: build/hmrc-data.csv build/openfigi-data.json data/fund-cate
 	### generating wikitext for main-list article
 	###
 	$(PYTHON3) bin/generate-wikitext.py -v -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c data/fund-categories.csv -f data/fund-families.txt
-	# TODO: print a diff with the old (current?) version
 
 build/wiki-secondary.txt: build/hmrc-data.csv build/openfigi-data.json build/uncategorized-funds.csv data/fund-families.txt bin/generate-wikitext.py
 	###
 	### generating wikitext for secondary-list article
 	###
 	$(PYTHON3) bin/generate-wikitext.py -v -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c build/uncategorized-funds.csv -f data/fund-families.txt
-	# TODO: print a diff with the old (current?) version
 
 OLD_MAIN      = $(shell ls -t build/wiki-main.txt.OLD-* 2>/dev/null | head -n 1)
 OLD_SECONDARY = $(shell ls -t build/wiki-secondary.txt.OLD-* 2>/dev/null | head -n 1)
 diff: build/wiki-main.txt build/wiki-secondary.txt
 ifdef HAVE_DIFF
-	@ if [ x != "x$OLD_MAIN" ] ; then \
+	@ if [ x != "x$(OLD_MAIN)" ] ; then \
 		printf '###\n### main wikitext - difference with old version\n###\n' ; \
 		$(DIFF) $(DIFF_OPTS) $(OLD_MAIN) build/wiki-main.txt ; \
 		echo; \
 	fi
-	@ if [ x != "x$OLD_SECONDARY" ] ; then \
+	@ if [ x != "x$(OLD_SECONDARY)" ] ; then \
 		printf '###\n### secondary wikitext - difference with old version\n###\n' ; \
 		$(DIFF) $(DIFF_OPTS) $(OLD_SECONDARY) build/wiki-secondary.txt ; \
 		echo; \
@@ -103,7 +104,7 @@ clean:
 	# moving old output files out of the way
 	for FILE in build/wiki-main.txt build/wiki-secondary.txt ; do \
 		if [ -e $$FILE ] ; then \
-			mv -v $$FILE $$FILE.OLD-$$(stat -c %y $$FILE | $(SED) -e 's/:[0-9][0-9]\..*$//;s/[^0-9]//g') ; \
+			mv -v $$FILE $$FILE.OLD-$$(stat -c %y $$FILE | $(SED) -e 's/:[0-9][0-9]\..*$$//;s/[^0-9]//g') ; \
 		fi ; \
 	done
 distclean:
