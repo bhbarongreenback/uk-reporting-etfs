@@ -18,10 +18,10 @@ the [Bogleheads&reg; Non-US Investing forum](https://www.bogleheads.org/forum/vi
       utility which comes with [Gnumeric](http://www.gnumeric.org/)
     - If you don't have ssconvert, the scripts will try to convert the sheet to CSV using the
       Python [`odfpy`](https://github.com/eea/odfpy) or [`openpyxl`](https://openpyxl.readthedocs.io/en/stable/)
-      modules.  Do note that this is takes roughly 10x more time and memory.
+      modules.  Do note that this will require roughly 10x more time and memory.
 - GNU Make
 - `sed` and `wget` (the cut-down versions in [busybox](https://www.busybox.net/) ought to work)
-- `diff` (to print the changes relative to the previous version at the end of the process)
+- `diff` (optional - to print the changes relative to the previous version at the end of the process)
 
 Developed/tested on Debian Linux. Probably works on Mac OS, but might fail because their shell commands differ slightly
 from those found on Linux (in which case please file a bug). You'll probably need WSL2 or something to run this on
@@ -37,7 +37,7 @@ and `build/wiki-secondary.txt` for the
 
 If new ETFs have come along since the last time `data/fund-categories.csv` was updated, the process will fail with
 an error message telling which CUSIPs (with corresponding tickers) need to be added to the fund categories file.
-Go look up the new ETFs, add an appropriate entry to the categories file, then restart the process by running `make` -
+Go look up the new ETFs, add appropriate entries to the categories file, then restart the process by running `make` -
 this will restart the scripts from the failed step, rather than from the beginning.
 
 
