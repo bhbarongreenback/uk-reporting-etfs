@@ -4,9 +4,12 @@ HMRC_SHEET_URL = https://www.gov.uk/government/publications/offshore-funds-list-
 SED            ?= sed
 WGET           ?= wget
 DIFF           ?= diff
-DIFF_OPTS      ?= -abi
 PYTHON3        ?= python3
 SSCONVERT      ?= ssconvert
+
+DIFF_OPTS      ?= -abi
+VERBOSITY      ?= -v
+OPENFIGI_OPTS  ?= 
 
 HAVE_SSCONVERT := $(shell command -v $(SSCONVERT) 2>/dev/null)
 HAVE_DIFF      := $(shell command -v $(DIFF) 2>/dev/null)
@@ -20,12 +23,14 @@ build:
 	mkdir -p build
 
 build/hmrc-data-page.html: build
+	@echo
 	###
 	### fetching HMRC data page
 	###
 	$(WGET) -O $@ "$(HMRC_SHEET_URL)"
 
 build/hmrc-data-url.txt: build/hmrc-data-page.html
+	@echo
 	###
 	### parsing HMRC data page to get download URL for HMRC data spreadsheet
 	###
@@ -33,6 +38,7 @@ build/hmrc-data-url.txt: build/hmrc-data-page.html
 	[ -s $@ ] || ( rm $@ ; false )
 
 build/hmrc-raw-data.bin: build/hmrc-data-url.txt
+	@echo
 	###
 	### downloading latest HMRC data spreadsheet
 	###
@@ -40,28 +46,32 @@ build/hmrc-raw-data.bin: build/hmrc-data-url.txt
 	( cd build ; ln -fs hmrc-raw-data.bin hmrc-raw-data.$(SHEET_EXT) )
 
 build/hmrc-raw-data.csv: build/hmrc-raw-data.bin build/hmrc-data-url.txt bin/convert-sheet.py
+	@echo
 	###
 	### converting HMRC data spreadsheet to CSV
 	###
 ifdef HAVE_SSCONVERT
 	$(SSCONVERT) build/hmrc-raw-data.$(SHEET_EXT) $@
 else
-	$(PYTHON3) bin/convert-sheet.py -v build/hmrc-raw-data.$(SHEET_EXT) $@
+	$(PYTHON3) bin/convert-sheet.py $(VERBOSITY) build/hmrc-raw-data.$(SHEET_EXT) $@
 endif
 
 build/hmrc-data.csv: build/hmrc-raw-data.csv data/errata.csv bin/filter-hmrc-sheet.py
+	@echo
 	###
 	### filtering HMRC sheet and applying errata
 	###
-	$(PYTHON3) bin/filter-hmrc-sheet.py -v -o $@ build/hmrc-raw-data.csv data/errata.csv
+	$(PYTHON3) bin/filter-hmrc-sheet.py $(VERBOSITY) -o $@ build/hmrc-raw-data.csv data/errata.csv
 
 build/openfigi-data.json: build/hmrc-data.csv bin/call-openfigi.py
+	@echo
 	###
 	### getting data from OpenFIGI for all ISINs in HMRC sheet
 	###
-	$(PYTHON3) bin/call-openfigi.py -v -c -o $@ build/hmrc-data.csv
+	$(PYTHON3) bin/call-openfigi.py $(VERBOSITY) $(OPENFIGI_OPTS) -c -o $@ build/hmrc-data.csv
 
 build/uncategorized-funds.csv: data/fund-categories.csv build
+	@echo
 	###
 	### generating "uncategorized funds" list
 	###
@@ -69,20 +79,23 @@ build/uncategorized-funds.csv: data/fund-categories.csv build
 	[ -s $@ ] || ( rm $@ ; false )
 
 build/wiki-main.txt: build/hmrc-data.csv build/openfigi-data.json data/fund-categories.csv data/fund-families.txt bin/generate-wikitext.py
+	@echo
 	###
 	### generating wikitext for main-list article
 	###
-	$(PYTHON3) bin/generate-wikitext.py -v -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c data/fund-categories.csv -f data/fund-families.txt
+	$(PYTHON3) bin/generate-wikitext.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c data/fund-categories.csv -f data/fund-families.txt
 
 build/wiki-secondary.txt: build/hmrc-data.csv build/openfigi-data.json build/uncategorized-funds.csv data/fund-families.txt bin/generate-wikitext.py
+	@echo
 	###
 	### generating wikitext for secondary-list article
 	###
-	$(PYTHON3) bin/generate-wikitext.py -v -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c build/uncategorized-funds.csv -f data/fund-families.txt
+	$(PYTHON3) bin/generate-wikitext.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.json -c build/uncategorized-funds.csv -f data/fund-families.txt
 
 OLD_MAIN      = $(shell ls -t build/wiki-main.txt.OLD-* 2>/dev/null | head -n 1)
 OLD_SECONDARY = $(shell ls -t build/wiki-secondary.txt.OLD-* 2>/dev/null | head -n 1)
 diff: build/wiki-main.txt build/wiki-secondary.txt
+	@echo
 ifdef HAVE_DIFF
 	@ if [ x != "x$(OLD_MAIN)" ] ; then \
 		printf '###\n### main wikitext - difference with old version\n###\n' ; \
