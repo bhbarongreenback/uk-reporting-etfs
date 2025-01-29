@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse, csv, datetime, json, re, sys
+import argparse, csv, re, sys
 
 from _cusip_isin import make_isin_from_cusip
-from _csv_formats import read_fundinfo_csv, column_matching, read_tickerinfo_csv
+from _csv_formats import read_fundinfo_csv, column_matching, \
+    read_tickerinfo_csv, write_fundinfo_csv
 from _logging import _LOGGER_, configure_logger
 
 
@@ -91,6 +92,7 @@ def enhance_fund_data(funds, cusip_to_tickerinfo, fund_families,
             continue
         seen_cusips.add(cusip)
         fund.ticker = tickerinfo.ticker
+        fund.figi = tickerinfo.figi
         # ...and ensure the fund has a correct ISIN set,
         # so we can include it as part of the output
         fund.cusip = cusip
@@ -132,42 +134,6 @@ def enhance_fund_data(funds, cusip_to_tickerinfo, fund_families,
     return result
 
 
-_REGEXP_NOT_USASCII = re.compile(r'[&<>{}\[\]\\\u007f-\uffff]')
-
-
-def mediawiki_escape(s):
-    return _REGEXP_NOT_USASCII.sub(lambda m:'&#%d;'%ord(m.group(0)), s)
-
-
-def reformat_date_from_ddmmyyyy_to_ddmmmyyyy(date_string):
-    try:
-        return datetime.datetime.strptime(date_string, '%d/%m/%Y').strftime('%d %b %Y')
-    except:
-        _LOGGER_.debug('couldn\'t reformat date: %s' % date_string)
-        return date_string
-
-
-def write_wiki_output(funds, output):
-    is_first_table = True
-    for category in sorted(set(map(lambda f: f.category, funds)), key=str.lower):
-        output.write('=== %s ===\n' % mediawiki_escape(category))
-        if is_first_table:
-            output.write('{{mw-datatable}}\n')
-            is_first_table = False
-        output.write('{| class="wikitable sortable mw-datatable"\n')
-        output.write('! Ticker || Fund Family || Fund Name || CUSIP || HMRC Reporting Since\n')
-        for fund in funds:
-            if fund.category == category:
-                output.write('|-\n| ' + ' || '.join([
-                    '[https://etf.com/%s %s]' % (fund.ticker, fund.ticker),
-                    mediawiki_escape(fund.family),
-                    mediawiki_escape(fund.fund_name),
-                    '<span title="ISIN: %s">%s</span>' % (fund.isin, fund.isin[2:11]),
-                    reformat_date_from_ddmmyyyy_to_ddmmmyyyy(fund.from_date)
-                ]) + '\n')
-        output.write('|}\n\n')
-
-
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description='Generate wikitext tables containing ETF data')
@@ -180,7 +146,7 @@ def parse_arguments():
     parser.add_argument('-o', '--output', metavar='OUTPUT_FILE',
                         default=sys.stdout,
                         type=argparse.FileType('w', encoding='UTF-8'),
-                        help='CSV output')
+                        help='File to which to write output as CSV')
     parser.add_argument('-i', '--hmrc-data', metavar='HMRC_DATA_FILE',
                         required=True,
                         type=argparse.FileType('r', encoding='UTF-8'),
@@ -212,5 +178,5 @@ if __name__ == '__main__':
     fund_categories = read_categories_file(args.categories)
     result = enhance_fund_data(fund_info, cusip_to_tickerinfo,
                                fund_families, fund_categories)
-    write_wiki_output(result, args.output)
+    write_fundinfo_csv(args.output, result, include_enhanced_columns=True)
 

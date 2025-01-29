@@ -316,7 +316,7 @@ def parse_arguments():
                         help='File to which to write OpenFIGI results as JSON')
     parser.add_argument('input', metavar='INPUT_FILE',
                         type=argparse.FileType('r', encoding='UTF-8'),
-                        help='CSV of ETF candidated from HMRC spreadsheet')
+                        help='CSV of ETF candidates from HMRC spreadsheet')
     result = parser.parse_args()
     return result
 

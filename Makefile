@@ -78,19 +78,33 @@ build/uncategorized-funds.csv: data/fund-categories.csv build
 	$(SED) -r '/.........,/{s/,$$/,,/;s/,[^,]+$$/,/;s/,,$$/,Excluded funds/}' < $< > $@
 	[ -s $@ ] || ( rm $@ ; false )
 
-build/wiki-main.txt: build/hmrc-data.csv build/openfigi-data.csv data/fund-categories.csv data/fund-families.txt bin/generate-wikitext.py
+build/results-main.csv: build/hmrc-data.csv build/openfigi-data.csv data/fund-categories.csv data/fund-families.txt bin/generate-results.py
+	@echo
+	###
+	### generating results CSV for main list
+	###
+	$(PYTHON3) bin/generate-results.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.csv -c data/fund-categories.csv -f data/fund-families.txt
+
+build/results-secondary.csv: build/hmrc-data.csv build/openfigi-data.csv build/uncategorized-funds.csv data/fund-families.txt bin/generate-results.py
+	@echo
+	###
+	### generating results CSV for secondary list
+	###
+	$(PYTHON3) bin/generate-results.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.csv -c build/uncategorized-funds.csv -f data/fund-families.txt
+
+build/wiki-main.txt: build/results-main.csv bin/results-to-wikitext.py
 	@echo
 	###
 	### generating wikitext for main-list article
 	###
-	$(PYTHON3) bin/generate-wikitext.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.csv -c data/fund-categories.csv -f data/fund-families.txt
+	$(PYTHON3) bin/results-to-wikitext.py $(VERBOSITY) -o $@ $<
 
-build/wiki-secondary.txt: build/hmrc-data.csv build/openfigi-data.csv build/uncategorized-funds.csv data/fund-families.txt bin/generate-wikitext.py
+build/wiki-secondary.txt: build/results-secondary.csv bin/results-to-wikitext.py
 	@echo
 	###
 	### generating wikitext for secondary-list article
 	###
-	$(PYTHON3) bin/generate-wikitext.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/openfigi-data.csv -c build/uncategorized-funds.csv -f data/fund-families.txt
+	$(PYTHON3) bin/results-to-wikitext.py $(VERBOSITY) -o $@ $<
 
 OLD_MAIN      = $(shell ls -t build/wiki-main.txt.OLD-* 2>/dev/null | head -n 1)
 OLD_SECONDARY = $(shell ls -t build/wiki-secondary.txt.OLD-* 2>/dev/null | head -n 1)
