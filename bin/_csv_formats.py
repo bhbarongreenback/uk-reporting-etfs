@@ -1,5 +1,7 @@
-import csv, dataclasses, os, re
+import csv, dataclasses, re
+
 from _logging import _LOGGER_
+
 
 @dataclasses.dataclass
 class FundInfo:
@@ -12,6 +14,7 @@ class FundInfo:
     share_class_ref: str = None
     ticker: str = None
     category: str = None
+
 
 _HEADER_SHARE_CLASS_REF = 'Share Class Ref'
 _HEADER_FAMILY          = 'Parent Fund'
@@ -100,3 +103,75 @@ def write_fundinfo_csv(filelike, fundinfos):
         f.from_date,
         f.to_date), fundinfos))
 
+
+@dataclasses.dataclass
+class TickerInfo:
+    ticker: str
+    cusip: str
+    fund_name: str = None
+    figi: str = None
+    exchange: str = None
+
+
+#_HEADER_CUSIP           = 'CUSIP'
+_HEADER_TICKER          = 'Ticker'
+_HEADER_NAME            = 'Name'
+_HEADER_FIGI            = 'FIGI'
+_HEADER_EXCHANGE        = 'Exchange'
+
+#_REGEXP_CUSIP           = re.compile(r'\bCUSIP\b')
+# more permissive to allow DTCC data to be used instead of OpenFIGI
+_REGEXP_TICKER          = re.compile(r'\b(?:ticker|symbol)\b', re.IGNORECASE)
+_REGEXP_NAME            = re.compile(r'\b(?:name|description)\b', re.IGNORECASE)
+_REGEXP_FIGI            = re.compile(r'\bFIGI\b')
+_REGEXP_EXCHANGE        = re.compile(r'\bexchange\b', re.IGNORECASE)
+
+
+def read_tickerinfo_csv(filelike):
+    result_count = 0
+
+    ticker_column = cusip_column = name_column = \
+        figi_column = exchange_column = None
+
+    csv_in = csv.reader(filelike)
+    for row in csv_in:
+        # If we haven't encountered the header row yet, try to match it -
+        # in the process figuring out which column each of the data items is in
+        if cusip_column is None:
+            ticker_column = column_matching(row, _REGEXP_TICKER)
+            cusip_column = column_matching(row, _REGEXP_CUSIP)
+            name_column = column_matching(row, _REGEXP_NAME)
+            figi_column = column_matching(row, _REGEXP_FIGI)
+            exchange_column = column_matching(row, _REGEXP_EXCHANGE)
+            continue
+
+        cusip = row[cusip_column] if (cusip_column is not None and len(row) > cusip_column) else None
+        if not cusip:
+            continue
+        yield TickerInfo(
+            cusip = cusip,
+            ticker = row[ticker_column] if (ticker_column is not None and len(row) > ticker_column) else None,
+            fund_name = row[name_column] if (name_column is not None and len(row) > name_column) else None,
+            figi = row[figi_column] if (figi_column is not None and len(row) > figi_column) else None,
+            exchange = row[exchange_column] if (exchange_column is not None and len(row) > exchange_column) else None)
+        result_count += 1
+
+    if cusip_column is None:
+        raise Exception('no CUSIP column in input file: ' + filelike.name)
+    _LOGGER_.info('input rows read: %d, filename: %s' % (result_count, filelike.name))
+
+
+def write_tickerinfo_csv(filelike, tickerinfos):
+    csv_out = csv.writer(filelike)
+    csv_out.writerow((
+        _HEADER_CUSIP,
+        _HEADER_TICKER,
+        _HEADER_NAME,
+        _HEADER_FIGI,
+        _HEADER_EXCHANGE))
+    csv_out.writerows(map(lambda f: (
+        f.cusip,
+        f.ticker,
+        f.fund_name,
+        f.figi,
+        f.exchange), tickerinfos))

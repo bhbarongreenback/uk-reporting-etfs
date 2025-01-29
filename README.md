@@ -73,7 +73,7 @@ result file.  Those files, in the order they are produced:
   conversion is done by `ssconvert` (if present) or by `bin/convert-sheet.py` (if not).
 - `build/hmrc-data.csv` - The above file with corrections applied from the errata file, then filtered down to just those
   rows with valid CUSIPs or US ISINs and empty cease dates.  This is produced by `bin/filter-hmrc-sheet.py`.
-- `build/openfigi-data.json` - Query results from the [OpenFIGI API](https://www.openfigi.com/api) for each
+- `build/openfigi-data.csv` - Query results from the [OpenFIGI API](https://www.openfigi.com/api) for each
   "interesting" ISIN/CUSIP in the HMRC sheet. The queries are conducted by `bin/call-openfigi.py`.  Do note that absent
   an OpenFIGI API key, this will be one of the slower steps in the process, owing to rate limits imposed on
   non-authenticated users by OpenFIGI.

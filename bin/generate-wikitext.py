@@ -3,7 +3,7 @@
 import argparse, csv, datetime, json, re, sys
 
 from _cusip_isin import make_isin_from_cusip
-from _fund_info import read_fundinfo_csv, column_matching
+from _csv_formats import read_fundinfo_csv, column_matching, read_tickerinfo_csv
 from _logging import _LOGGER_, configure_logger
 
 
@@ -51,26 +51,24 @@ def read_categories_file(categories_filelike):
     return result
 
 
-def result_for_fundinfo(fund, isin_to_openfigi_result):
+def result_for_fundinfo(fund, cusip_to_tickerinfo):
     '''
-    Given a FundInfo object and a dictionary of ISINs to OpenFIGI
-    result objects, return the relevant OpenFIGI result object
+    Given a FundInfo object and a dictionary of CUSIPs to
+    TickerInfo objects, return the relevant TickerInto object
     based on either the ISIN or the CUSIP (or None if no relevant
     result exists).
     '''
-    if fund.isin and isin_to_openfigi_result.get(fund.isin, None) is not None:
-        return (fund.isin, isin_to_openfigi_result[fund.isin])
-    elif fund.cusip:
-        cusip_isin = make_isin_from_cusip(fund.cusip)
-        if isin_to_openfigi_result.get(cusip_isin, None) is not None:
-            return (cusip_isin, isin_to_openfigi_result[cusip_isin])
+    if fund.isin and fund.isin[2:11] in cusip_to_tickerinfo and cusip_to_tickerinfo[fund.isin[2:11]].ticker:
+        return (fund.isin[2:11], cusip_to_tickerinfo[fund.isin[2:11]])
+    elif fund.cusip and fund.cusip in cusip_to_tickerinfo and cusip_to_tickerinfo[fund.cusip].ticker:
+        return (fund.cusip, cusip_to_tickerinfo[fund.cusip])
     return (None, None)
 
 
 _REGEXP_TRAILING_RUBBISH = re.compile(r'\b(\s+-\s*|\s*-\s+)\b(?=.*\b(shares?|class)\b)([^-]+)$', re.I)
 
 
-def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
+def enhance_fund_data(funds, cusip_to_tickerinfo, fund_families,
                       fund_categories):
     '''
     Take the FundInfo objects derived from the HMRC sheet and match them
@@ -80,22 +78,23 @@ def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
     and categories.
     '''
     result = list()
-    seen_isins = set()
+    seen_cusips = set()
     uncategorized_funds = list()
     family_regex = re.compile(r'^('+'|'.join(map(re.escape, fund_families))+r')\b', re.I)
     _LOGGER_.info('start enhancing fund data')
     for fund in funds:
         # Determine ticker for the fund...
-        (isin, openfigi) = result_for_fundinfo(fund, isin_to_openfigi_result)
-        if not openfigi or 'ticker' not in openfigi or isin in seen_isins:
+        (cusip, tickerinfo) = result_for_fundinfo(fund, cusip_to_tickerinfo)
+        if not tickerinfo or cusip in seen_cusips:
             # ...ignoring the fund if there's no ETF ticker, or it's a
             # duplicate ISIN (sometimes seen in the HMRC data?!)
             continue
-        seen_isins.add(isin)
-        fund.ticker = openfigi['ticker']
+        seen_cusips.add(cusip)
+        fund.ticker = tickerinfo.ticker
         # ...and ensure the fund has a correct ISIN set,
         # so we can include it as part of the output
-        fund.isin = isin
+        fund.cusip = cusip
+        fund.isin = make_isin_from_cusip(fund.cusip)
         # Determine the fund family name from the HMRC "parent fund" data
         # (if parent fund starts with one of the family names from the
         # fund families file, use the shorter family name instead)
@@ -103,16 +102,16 @@ def enhance_fund_data(funds, isin_to_openfigi_result, fund_families,
         if m:
             fund.family = m.group(1)
         # Look up the category of the fund using the CUSIP
-        if fund.isin[2:11] not in fund_categories:
+        if fund.cusip not in fund_categories:
             # If the CUSIP doesn't appear in the categories file, add the
             # fund to the list of uncategorized funds, and ignore it
             uncategorized_funds.append(fund)
             continue
-        elif not fund_categories[fund.isin[2:11]]:
+        elif not fund_categories[fund.cusip]:
             # Ignore the fund if CUSIP is in the file but category is blank
             continue
         else:
-            fund.category = fund_categories[fund.isin[2:11]]
+            fund.category = fund_categories[fund.cusip]
         # Finally, clean up the fund name following a few rules...
         # Strip the fund family name from the start of the fund name
         fund.fund_name = re.sub('^'+re.escape(fund.family)+r'\s+','',fund.fund_name, re.I)
@@ -188,7 +187,7 @@ def parse_arguments():
                         help='CSV input of filtered data from HMRC spreadsheet')
     parser.add_argument('-g', '--openfigi-data', metavar='OPENFIGI_DATA_FILE',
                         required=True,
-                        type=argparse.FileType('rb'),
+                        type=argparse.FileType('r', encoding='UTF-8'),
                         help='JSON input of OpenFIGI query results')
     parser.add_argument('-c', '--categories', metavar='CATEGORY_DATA_FILE',
                         required=True,
@@ -207,10 +206,11 @@ if __name__ == '__main__':
     configure_logger(args.quiet, args.verbose, args.log_file)
 
     fund_info = read_fundinfo_csv(args.hmrc_data)
-    isin_to_openfigi_result = json.load(args.openfigi_data)
+    tickerinfos = tuple(read_tickerinfo_csv(args.openfigi_data))
+    cusip_to_tickerinfo = dict(zip(map(lambda t: t.cusip, tickerinfos), tickerinfos))
     fund_families = read_families_file(args.families)
     fund_categories = read_categories_file(args.categories)
-    result = enhance_fund_data(fund_info, isin_to_openfigi_result,
+    result = enhance_fund_data(fund_info, cusip_to_tickerinfo,
                                fund_families, fund_categories)
     write_wiki_output(result, args.output)
 

@@ -2,7 +2,7 @@
 
 import argparse, itertools, json, os, time, urllib.request
 from _cusip_isin import make_isin_from_cusip
-from _fund_info import read_fundinfo_csv
+from _csv_formats import read_fundinfo_csv, TickerInfo, read_tickerinfo_csv, write_tickerinfo_csv
 from _logging import _LOGGER_, configure_logger
 
 
@@ -22,21 +22,52 @@ OPENFIGI_JOBS_PER_CALL_WITH_KEY = 100
 '''Default OpenFIGI call size limit when an API key is used.'''
 
 
-def isins_for_funds(funds, cache):
+def isins_from_sheet_for_funds(funds, cache, queried_isin_cusips):
     '''
     Generator function which, given a series of FundInfo objects,
     iterates over the unique ISINs we'll want to query from OpenFIGI.
     '''
-    seen = set(cache.keys())
     for fund in funds:
-        if fund.isin and fund.isin not in seen:
-            seen.add(fund.isin)
-            yield fund.isin
-        if fund.cusip:
-            isin_from_cusip = make_isin_from_cusip(fund.cusip)
-            if isin_from_cusip != fund.isin and isin_from_cusip not in seen:
-                seen.add(isin_from_cusip)
-                yield isin_from_cusip
+        if fund.isin:
+            isin_cusip = fund.isin[2:11]
+            if (isin_cusip not in cache or not cache[isin_cusip].ticker) and isin_cusip not in queried_isin_cusips:
+                queried_isin_cusips.add(isin_cusip)
+                yield fund.isin
+
+
+def cusips_from_sheet_for_funds(funds, cache, queried_cusips):
+    '''
+    Generator function which, given a series of FundInfo objects,
+    iterates over the unique CUSIPs we'll want to query from OpenFIGI.
+    '''
+    for fund in funds:
+        if fund.cusip and (fund.cusip not in cache or not cache[fund.cusip].ticker) and fund.cusip not in queried_cusips:
+            queried_cusips.add(fund.cusip)
+            yield fund.cusip
+
+
+def cusips_from_isins_for_funds(funds, cache, queried_cusips):
+    '''
+    Generator function which, given a series of FundInfo objects,
+    iterates over the unique CUSIPs derived from ISINs we'll want to query from OpenFIGI.
+    '''
+    for fund in funds:
+        if fund.isin:
+            isin_cusip = fund.isin[2:11]
+            if (isin_cusip not in cache or not cache[isin_cusip].ticker) and isin_cusip not in queried_cusips:
+                queried_cusips.add(isin_cusip)
+                yield isin_cusip
+
+
+def isins_from_cusips_for_funds(funds, cache, queried_isin_cusips):
+    '''
+    Generator function which, given a series of FundInfo objects,
+    iterates over the unique ISINs derived from CUSIPs we'll want to query from OpenFIGI.
+    '''
+    for fund in funds:
+        if fund.cusip and (fund.cusip not in cache or not cache[fund.cusip].ticker) and fund.cusip not in queried_isin_cusips:
+            queried_isin_cusips.add(fund.cusip)
+            yield make_isin_from_cusip(fund.cusip)
 
 
 def group_into_sublists(it, n):
@@ -64,6 +95,14 @@ def isin_to_openfigi_job(isin):
     a query to OpenFIGI to get any records for an ETF with the given ISIN.
     '''
     return {"idType":"ID_ISIN","idValue":isin,"securityType":"ETP"}
+
+
+def cusip_to_openfigi_job(cusip):
+    '''
+    Given a CUSIP, return a JSON object which can be passed as part of
+    a query to OpenFIGI to get any records for an ETF with the given CUSIP.
+    '''
+    return {"idType":"ID_CUSIP","idValue":cusip,"securityType":"ETP"}
 
 
 def rate_limit(it, items_per_minute):
@@ -146,6 +185,42 @@ def get_best_openfigi_result(job_response):
     return best_result
 
 
+def openfigi_result_as_tickerinfo(cusip, openfigi_result):
+    return TickerInfo(cusip=cusip,
+                      ticker=openfigi_result.get('ticker', None) if openfigi_result else None,
+                      fund_name=openfigi_result.get('name', None) if openfigi_result else None,
+                      figi=openfigi_result.get('figi', None) if openfigi_result else None,
+                      exchange=openfigi_result.get('exchCode', None) if openfigi_result else None)
+
+
+def call_openfigi_stage(ids_to_query, id_type_plural, id_to_cusip,
+                        calls_per_minute, jobs_per_call, call_openfigi_lambda,
+                        id_to_job_fn):
+    if not ids_to_query:
+        _LOGGER_.info('not querying OpenFIGI for %s (none we need to query)' % id_type_plural)
+        return dict()
+    _LOGGER_.info('start querying OpenFIGI for %s (%d to query)' %
+                  (id_type_plural, len(ids_to_query)))
+    ids_to_query_with_progress = progress_reporting_iterator(
+        ids_to_query, jobs_per_call,
+        '%%d of %d %s queried' % (len(ids_to_query), id_type_plural))
+    openfigi_jobs_grouped = group_into_sublists(
+        map(id_to_job_fn, ids_to_query_with_progress),
+        jobs_per_call)
+    openfigi_results_grouped = map(
+        call_openfigi_lambda,
+        rate_limit(openfigi_jobs_grouped, calls_per_minute * 0.95))
+    openfigi_results = map(get_best_openfigi_result,
+                           itertools.chain.from_iterable(
+                               openfigi_results_grouped))
+    cusips = tuple(map(id_to_cusip, ids_to_query))
+    tickerinfos = map(lambda t: openfigi_result_as_tickerinfo(t[0],t[1]), zip(cusips, openfigi_results))
+    cusips_to_tickerinfos = dict(zip(cusips, tickerinfos))
+    _LOGGER_.info('finished querying OpenFIGI for %s (%d results returned)' %
+                  (id_type_plural, len(cusips_to_tickerinfos)))
+    return cusips_to_tickerinfos
+
+
 def get_openfigi_results(funds,
                          openfigi_cache,
                          openfigi_calls_per_minute,
@@ -153,15 +228,16 @@ def get_openfigi_results(funds,
                          openfigi_url,
                          openfigi_api_key):
     '''
-    Given a list of FundInfo objects, return a dictionary of ISINs to
+    Given a list of FundInfo objects, return a dictionary of CUSIPs to
     OpenFIGI results representing everything we can find out from the
     OpenFIGI API and/or the local OpenFIGI cache about any ETFs related
     to those FundInfo objects.
     '''
     if openfigi_cache and os.path.exists(openfigi_cache):
         _LOGGER_.info('loading OpenFIGI cache from %s' % openfigi_cache)
-        with open(openfigi_cache,'r') as f:
-            cache = json.load(f)
+        with open(openfigi_cache, 'r', encoding='UTF-8') as f:
+            tickerinfos = tuple(read_tickerinfo_csv(f))
+            cache = dict(zip(map(lambda t: t.cusip, tickerinfos), tickerinfos))
     else:
         cache = dict()
     jobs_per_call = openfigi_jobs_per_call or \
@@ -171,27 +247,44 @@ def get_openfigi_results(funds,
                        (OPENFIGI_CALLS_PER_MINUTE_WITH_KEY if openfigi_api_key
                         else OPENFIGI_CALLS_PER_MINUTE_WITHOUT_KEY)
     openfigi_url = openfigi_url or OPENFIGI_ENDPOINT_URL
-    isins_to_query = tuple(isins_for_funds(funds, cache))
-    if not isins_to_query:
-        _LOGGER_.info('not querying OpenFIGI (no ISINs we need to query)')
-        return cache
-    _LOGGER_.info('start querying OpenFIGI (%d ISINs to query)' %
-                  len(isins_to_query))
-    isins_to_query_with_progress = progress_reporting_iterator(
-        isins_to_query, jobs_per_call,
-        '%%d of %d ISINs queried' % len(isins_to_query))
-    openfigi_jobs_grouped = group_into_sublists(
-        map(isin_to_openfigi_job, isins_to_query_with_progress),
-        jobs_per_call)
-    openfigi_results_grouped = map(
-        lambda x: call_openfigi(x, openfigi_url, openfigi_api_key),
-        rate_limit(openfigi_jobs_grouped, calls_per_minute*0.95))
-    openfigi_results = map(get_best_openfigi_result,
-                           itertools.chain.from_iterable(openfigi_results_grouped))
-    isin_to_openfigi_result = dict(zip(isins_to_query, openfigi_results))
-    _LOGGER_.info('finished querying OpenFIGI (%d results returned)' %
-                  len(isin_to_openfigi_result))
-    cache |= isin_to_openfigi_result
+    call_openfigi_lambda = lambda x: call_openfigi(x, openfigi_url, openfigi_api_key)
+
+    queried_isin_cusips = set(cache.keys())
+    queried_cusips = set(cache.keys())
+
+    cache |= call_openfigi_stage(
+        tuple(isins_from_sheet_for_funds(funds, cache, queried_isin_cusips)),
+        'ISINs',
+        lambda x: x[2:11],
+        calls_per_minute,
+        jobs_per_call,
+        call_openfigi_lambda,
+        isin_to_openfigi_job)
+    cache |= call_openfigi_stage(
+        tuple(cusips_from_sheet_for_funds(funds, cache, queried_cusips)),
+        'CUSIPs',
+        lambda x: x,
+        calls_per_minute,
+        jobs_per_call,
+        call_openfigi_lambda,
+        cusip_to_openfigi_job)
+    cache |= call_openfigi_stage(
+        tuple(isins_from_cusips_for_funds(funds, cache, queried_isin_cusips)),
+        'CUSIP-derived ISINs',
+        lambda x: x[2:11],
+        calls_per_minute,
+        jobs_per_call,
+        call_openfigi_lambda,
+        isin_to_openfigi_job)
+    cache |= call_openfigi_stage(
+        tuple(cusips_from_isins_for_funds(funds, cache, queried_cusips)),
+        'ISIN-derived CUSIPs',
+        lambda x: x,
+        calls_per_minute,
+        jobs_per_call,
+        call_openfigi_lambda,
+        cusip_to_openfigi_job)
+
     return cache
 
 
@@ -231,14 +324,13 @@ def parse_arguments():
 if __name__ == '__main__':
     args = parse_arguments()
     configure_logger(args.log_file, args.verbose, args.quiet)
-    funds = read_fundinfo_csv(args.input)
-    openfigi = get_openfigi_results(funds,
-                                    args.output if args.cache else None,
-                                    args.openfigi_calls_per_minute,
-                                    args.openfigi_jobs_per_call,
-                                    args.openfigi_endpoint_url,
-                                    args.openfigi_api_key)
-    with open(args.output, 'w') as f:
-        json.dump(openfigi, f, indent=4)
-
+    funds = tuple(read_fundinfo_csv(args.input))
+    tickerinfos = get_openfigi_results(funds,
+                                       args.output if args.cache else None,
+                                       args.openfigi_calls_per_minute,
+                                       args.openfigi_jobs_per_call,
+                                       args.openfigi_endpoint_url,
+                                       args.openfigi_api_key)
+    with open(args.output, 'w', encoding='UTF-8') as f:
+        write_tickerinfo_csv(f, sorted(tickerinfos.values(), key=lambda t: t.cusip))
 

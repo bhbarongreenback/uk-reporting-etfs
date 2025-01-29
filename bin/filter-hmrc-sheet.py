@@ -5,7 +5,7 @@ import argparse, re, sys
 
 from _cusip_isin import cusip_check_digit, isin_check_digit
 from _logging import _LOGGER_, configure_logger
-from _fund_info import read_fundinfo_csv, write_fundinfo_csv
+from _csv_formats import read_fundinfo_csv, write_fundinfo_csv
 
 
 _REGEXP_NOT_ALNUM = re.compile(r'[^0-9A-Z]+')
