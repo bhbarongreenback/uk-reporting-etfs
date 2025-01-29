@@ -106,11 +106,24 @@ build/wiki-secondary.txt: build/results-secondary.csv bin/results-to-wikitext.py
 	###
 	$(PYTHON3) bin/results-to-wikitext.py $(VERBOSITY) -o $@ $<
 
+build/siblings.csv: build/hmrc-raw-data.csv build/results-main.csv build/results-secondary.csv bin/find-siblings.py
+	@echo
+	###
+	### generating "sibling fund" CSV report
+	###
+	$(PYTHON3) bin/find-siblings.py $(VERBOSITY) -o $@ -i build/hmrc-raw-data.csv build/results-main.csv build/results-secondary.csv
+
+OLD_SIBLINGS  = $(shell ls -t build/siblings.csv.OLD-* 2>/dev/null | head -n 1)
 OLD_MAIN      = $(shell ls -t build/wiki-main.txt.OLD-* 2>/dev/null | head -n 1)
 OLD_SECONDARY = $(shell ls -t build/wiki-secondary.txt.OLD-* 2>/dev/null | head -n 1)
-diff: build/wiki-main.txt build/wiki-secondary.txt
+diff: build/wiki-main.txt build/wiki-secondary.txt build/siblings.csv
 	@echo
 ifdef HAVE_DIFF
+	@ if [ x != "x$(OLD_SIBLINGS)" ] ; then \
+		printf '###\n### siblings report - difference with old version\n###\n' ; \
+		$(DIFF) $(DIFF_OPTS) $(OLD_SIBLINGS) build/siblings.csv ; \
+		echo; \
+	fi
 	@ if [ x != "x$(OLD_MAIN)" ] ; then \
 		printf '###\n### main wikitext - difference with old version\n###\n' ; \
 		$(DIFF) $(DIFF_OPTS) $(OLD_MAIN) build/wiki-main.txt ; \
@@ -165,9 +178,9 @@ dtcc: build/nofigi-main.csv build/nofigi-secondary.csv build/dtcc-main.csv build
 
 clean:
 	# removing old intermediate files
-	rm -vf build/hmrc-* build/openfigi-* build/uncategorized-*
+	rm -vf build/hmrc-* build/openfigi-* build/uncategorized-* build/results-* build/dtcc* build/nofigi-*
 	# moving old output files out of the way
-	for FILE in build/wiki-main.txt build/wiki-secondary.txt ; do \
+	for FILE in build/wiki-main.txt build/wiki-secondary.txt build/siblings.csv ; do \
 		if [ -e $$FILE ] ; then \
 			mv -v $$FILE $$FILE.OLD-$$(stat -c %y $$FILE | $(SED) -e 's/:[0-9][0-9]\..*$$//;s/[^0-9]//g') ; \
 		fi ; \
