@@ -2,10 +2,11 @@ Share Class Ref,Parent Fund,Sub Fund,ISIN,CUSIP,Remarks
 A0585-0001,Brown Advisory,,,,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 D0033-0005,,,,25459Y694,Direxion Daily Financial Bear 3x Shares: CUSIP changed from that used in HMRC sheet.  Source: https://www.direxion.com/product/daily-financial-bull-bear-3x-etfs - retrieved 24 Dec 2022.
 D0033-0006,,,US25460E2404,,Direxion Daily Financial Bull 3x Shares: CUSIP changed from that used in HMRC sheet.  Source: https://www.direxion.com/product/daily-financial-bull-bear-3x-etfs - retrieved 24 Dec 2022.  (Data rendered as an ISIN to prevent the bare CUSIP from being interpreted as scientific notation by most spreadsheet programs.)
-D0115-0010,,Dimensional Inflation Protected Securities ETF,,,"No ISIN/CUSIP problems, but sub fund name started with “Dimensionional”."
+D0115-0010,,Dimensional Inflation Protected Securities ETF,,,"No ISIN/CUSIP problems, but sub fund name started with ""Dimensionional""."
 D0115-0019,,,,25434V831,Dimensional US High Profitability ETF: mangled ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/duhp/us-high-profitability-etf - retrieved 24 Dec 2022.
 D0115-0026,,,,25434V740,Dimensional Emerging Markets Value ETF: incorrect ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/dfev/emerging-markets-value-etf - retrieved 24 Dec 2022.
 D0115-0028,,,,25434V724,Dimensional US Marketwide Value ETF: incorrect ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/dfuv/us-marketwide-value-etf - retrieved 24 Dec 2022.
+D0115-0041,,,,25434V575,Dimensional Global ex US Core Fixed Income ETF: incorrect CUSIP in HMRC sheet: Source: https://www.dimensional.com/us-en/funds/dfgx/global-ex-us-core-fixed-income-etf
 F0122-0005,,First Trust Nasdaq BuyWrite Income ETF,,,"Sub-fund name in HMRC sheet is an apparent copy-and-paste error (was ""First Trust S-Network Future Vehicles & Technology ETF"", correct entry for which is at F0113-0011)."
 G0080-0005,,,US37960A6698,,Global X SuperDividend ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/sdiv/ - retrieved 24 Dec 2022.
 G0080-0010,,,US37954Y3190,,Global X MSCI Greece ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/GREK/ - retrieved 24 Dec 2022
