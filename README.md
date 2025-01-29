@@ -81,16 +81,27 @@ result file.  Those files, in the order they are produced:
   uncategorized funds assigned to the "Excluded funds" category, and categorized funds stripped of their category. Used
   to produce the [secondary list](https://www.bogleheads.org/wiki/UK-reporting_US_ETFs_not_included_in_the_main_listing)
   of "non-Bogleheady" ETFs. Generated using a `sed` one-liner.
-- `build/wiki-main.txt` - MediaWiki-style wikitext source for the ETF tables in the
+- `build/results-main.csv` - Information about the ETFs which appear in the tables in the
   [main list](https://www.bogleheads.org/wiki/US_domiciled_ETFs_that_are_UK_HMRC_reporting_funds). Generated from the
-  above files by `bin/generate-wikitext.py`.
+  above files by `bin/generate-results.py`.
+- `build/results-secondary.csv` - Information about the ETFs which appear in the tables in the
+  [secondary list](https://www.bogleheads.org/wiki/UK-reporting_US_ETFs_not_included_in_the_main_listing). Generated
+  from the above files by `generate-results.py`.
+- `build/wiki-main.txt` - MediaWiki-style wikitext source for the ETF tables in the main list. Generated from
+  `build/results-main.csv` by `bin/results-to-wikitext.py`.
   - `build/wiki-main.txt.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
     printed to the console at the end. Moved from `build/wiki-main.txt` to this location when you run `make clean`.
-- `build/wiki-secondary.txt` - MediaWiki-style wikitext source for the ETF tables in the
-  [secondary list](https://www.bogleheads.org/wiki/UK-reporting_US_ETFs_not_included_in_the_main_listing). Generated
-  from the above files by `bin/generate-wikitext.py`.
+- `build/wiki-secondary.txt` - MediaWiki-style wikitext source for the ETF tables in the secondary list. Generated
+  from `build/results-secondary.csv` by `bin/generate-wikitext.py`.
   - `build/wiki-secondary.txt.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
     printed to the console at the end. Moved from `build/wiki-secondary.txt` to this location when you run `make clean`.
+- `build/siblings.csv` - Rows from the raw HMRC spreadsheet (`build/hmrc-raw-data.csv`) which correspond to funds from
+  the same fund families as those in the main and secondary lists, but which haven't been included in those lists for
+  some reason.  This may be due to some unusual circumstance with the fund (such as a reorganization or liquidation),
+  or it may be due to erroneous data in the HMRC sheet.
+  - `build/siblings.csv.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
+    printed to the console at the end. Moved from `build/siblings.csv` to this location when you run `make clean`.
+
 
 # More info
 
