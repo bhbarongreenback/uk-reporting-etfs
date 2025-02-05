@@ -1,6 +1,5 @@
 # This file tells the Python tooling what versions of certain modules
 # this script requires.  (Module versions are as in Debian Bullseye.)
-mechanize >= 0.4.5
 openpyxl >= 3.0.3
 odfpy >= 1.4.1
 
