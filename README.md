@@ -87,7 +87,7 @@ result file.  Those files, in the order they are produced:
   above files by [`bin/generate-results.py`](bin/generate-results.py).
 - `build/results-secondary.csv` - Information about the ETFs which appear in the tables in the
   [secondary list](https://www.bogleheads.org/wiki/UK-reporting_US_ETFs_not_included_in_the_main_listing). Generated
-  from the above files by `generate-results.py`.
+  from the above files by [`bin/generate-results.py`](bin/generate-results.py).
 - `build/wiki-main.txt` - MediaWiki-style wikitext source for the ETF tables in the main list. Generated from
   `build/results-main.csv` by [`bin/results-to-wikitext.py`](bin/results-to-wikitext.py).
   - `build/wiki-main.txt.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
