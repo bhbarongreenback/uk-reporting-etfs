@@ -93,7 +93,7 @@ result file.  Those files, in the order they are produced:
   - `build/wiki-main.txt.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
     printed to the console at the end. Moved from `build/wiki-main.txt` to this location when you run `make clean`.
 - `build/wiki-secondary.txt` - MediaWiki-style wikitext source for the ETF tables in the secondary list. Generated
-  from `build/results-secondary.csv` by `bin/generate-wikitext.py`.
+  from `build/results-secondary.csv` by [`bin/results-to-wikitext.py`](bin/results-to-wikitext.py).
   - `build/wiki-secondary.txt.OLD-YYYYMMDDHHMM` - Output from previous runs of this process, used to generate the diff
     printed to the console at the end. Moved from `build/wiki-secondary.txt` to this location when you run `make clean`.
 - `build/siblings.csv` - Rows from the raw HMRC spreadsheet (`build/hmrc-raw-data.csv`) which correspond to funds from
