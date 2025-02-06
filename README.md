@@ -71,7 +71,7 @@ result file.  Those files, in the order they are produced:
     - `build/hmrc-raw-data.ods` or `build/hmrc-raw-data.xlsx` - Symbolic link to the HMRC spreadsheet data file, with a
       file extension that lets the spreadsheet-conversion tools used in the next step know its format.
 - `build/hmrc-raw-data.csv` - The above file converted to CSV, which is easier for the Python scripts to read. The
-  conversion is done by `ssconvert` (if present) or by [`bin/convert-sheet.py`](bin/convert-sheet.py) (if not).
+  conversion is done by `ssconvert` or LibreOffice (if present) or by [`bin/convert-sheet.py`](bin/convert-sheet.py) (if not).
 - `build/hmrc-data.csv` - The above file with corrections applied from the errata file, then filtered down to just
   those rows with valid CUSIPs or US ISINs and empty cease dates. This is produced by
   [`bin/filter-hmrc-sheet.py`](bin/filter-hmrc-sheet.py).
