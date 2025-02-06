@@ -6,12 +6,14 @@ WGET           ?= wget
 DIFF           ?= diff
 PYTHON3        ?= python3
 SSCONVERT      ?= ssconvert
+LOCALC         ?= localc
 
 DIFF_OPTS      ?= -abi
 VERBOSITY      ?= -v
 OPENFIGI_OPTS  ?= 
 
 HAVE_SSCONVERT := $(shell command -v $(SSCONVERT) 2>/dev/null)
+HAVE_LOCALC    := $(shell command -v $(LOCALC) 2>/dev/null)
 HAVE_DIFF      := $(shell command -v $(DIFF) 2>/dev/null)
 
 SHEET_EXT      = $(shell $(SED) -e 's/^.*\.//' < build/hmrc-data-url.txt)
@@ -52,6 +54,8 @@ build/hmrc-raw-data.csv: build/hmrc-raw-data.bin build/hmrc-data-url.txt bin/con
 	###
 ifdef HAVE_SSCONVERT
 	$(SSCONVERT) build/hmrc-raw-data.$(SHEET_EXT) $@
+else ifdef HAVE_LOCALC
+	$(LOCALC) --convert-to csv:"Text - txt - csv (StarCalc):44,34,76" --outdir build build/hmrc-raw-data.$(SHEET_EXT)
 else
 	$(PYTHON3) bin/convert-sheet.py $(VERBOSITY) build/hmrc-raw-data.$(SHEET_EXT) $@
 endif
@@ -164,15 +168,15 @@ build/dtcc-secondary.csv: build/hmrc-data.csv build/dtcc.csv build/uncategorized
 	$(PYTHON3) bin/generate-results.py $(VERBOSITY) -o $@ -i build/hmrc-data.csv -g build/dtcc.csv -c build/uncategorized-funds.csv -f data/fund-families.txt
 
 build/nofigi-main.csv: build/results-main.csv
-	$(SED) -re 's/,[^,]*$$/,/' < $< > $@
+	$(SED) -re 's/,BBG[^,]+$$/,/' < $< > $@
 build/nofigi-secondary.csv: build/results-secondary.csv
-	$(SED) -re 's/,[^,]*$$/,/' < $< > $@
+	$(SED) -re 's/,BBG[^,]+$$/,/' < $< > $@
 
 dtcc: build/nofigi-main.csv build/nofigi-secondary.csv build/dtcc-main.csv build/dtcc-secondary.csv
-	@ printf '###\n### main results - DTCC difference from OpenFIGI\n###\n'
+	@ printf '\n###\n### main results - DTCC difference from OpenFIGI\n###\n'
 	@ $(DIFF) $(DIFF_OPTS) build/nofigi-main.csv build/dtcc-main.csv || true
 	@ echo
-	@ printf '###\n### secondary results - DTCC difference from OpenFIGI\n###\n'
+	@ printf '\n###\n### secondary results - DTCC difference from OpenFIGI\n###\n'
 	@ $(DIFF) $(DIFF_OPTS) build/nofigi-secondary.csv build/dtcc-secondary.csv || true
 	@ echo
 

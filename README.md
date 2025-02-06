@@ -16,7 +16,9 @@ the [Bogleheads&reg; Non-US Investing forum](https://www.bogleheads.org/forum/vi
 - Something to convert the HMRC data spreadsheet to CSV
     - Recommended: [`ssconvert`](https://manpages.debian.org/bookworm/gnumeric/ssconvert.1.en.html), a command-line
       utility which comes with [Gnumeric](http://www.gnumeric.org/)
-    - If you don't have ssconvert, the scripts will try to convert the sheet to CSV using the
+    - Also recommended: [LibreOffice](https://www.libreoffice.org/) - if available, the script will attempt to use
+      LibreOffice's command-line interface to convert the spreadsheet
+    - If you don't have ssconvert or LibreOffice, the scripts will try to convert the sheet to CSV using the
       Python [`odfpy`](https://github.com/eea/odfpy) or [`openpyxl`](https://openpyxl.readthedocs.io/en/stable/)
       modules.  Do note that this will require roughly 10x more time and memory.
 - GNU Make
