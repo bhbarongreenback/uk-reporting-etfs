@@ -54,7 +54,7 @@ if __name__ == '__main__':
             share_class_ref = safe_get_column(share_class_ref_col, row)
             ceased = safe_get_column(ceased_col, row)
             if not share_class_ref \
-                    or __REGEXP_DATE.match(ceased) \
+                    or (ceased and __REGEXP_DATE.match(ceased)) \
                     or share_class_ref in share_class_refs \
                     or not families_regexp.match(share_class_ref):
                 continue

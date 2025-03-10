@@ -13,7 +13,7 @@ def column_matching(row, regexp):
 
 
 def safe_get_column(column, row):
-    if column is not None and len(row) > column:
+    if column is not None and len(row) > column and row[column] not in ('\u2014', 'no data'):
         return row[column]
     else:
         return None
