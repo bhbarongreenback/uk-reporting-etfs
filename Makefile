@@ -53,7 +53,7 @@ build/hmrc-raw-data.csv: build/hmrc-raw-data.bin build/hmrc-data-url.txt bin/con
 	### converting HMRC data spreadsheet to CSV
 	###
 ifdef HAVE_SSCONVERT
-	$(SSCONVERT) build/hmrc-raw-data.$(SHEET_EXT) $@
+	$(SSCONVERT) build/hmrc-raw-data.$(SHEET_EXT) $@ 2>/dev/null
 else ifdef HAVE_LOCALC
 	$(LOCALC) --convert-to csv:"Text - txt - csv (StarCalc):44,34,76" --outdir build build/hmrc-raw-data.$(SHEET_EXT)
 else
