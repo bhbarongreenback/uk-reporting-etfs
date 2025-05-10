@@ -3,6 +3,7 @@ American Century
 BondBloxx
 Dimensional
 Direxion
+Elm
 First Trust
 Franklin Templeton
 Global X
@@ -16,6 +17,7 @@ Rayliant
 Roundhill
 SPDR
 Sprott
+TCW
 T. Rowe Price
 VanEck
 Vanguard
