@@ -1,8 +1,8 @@
 Share Class Ref,Parent Fund,Sub Fund,ISIN,CUSIP,Remarks
 A0585-0001,Brown Advisory,,,,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0611-0001,Ark,21Shares Bitcoin ETF,,,Overriding legal-entity name of the fund with the family/fund names generally used in marketing.
-D0033-0005,,,,25459Y694,Direxion Daily Financial Bear 3x Shares: CUSIP changed from that used in HMRC sheet.  Source: https://www.direxion.com/product/daily-financial-bull-bear-3x-etfs - retrieved 24 Dec 2022.
-D0033-0006,,,US25460E2404,,Direxion Daily Financial Bull 3x Shares: CUSIP changed from that used in HMRC sheet.  Source: https://www.direxion.com/product/daily-financial-bull-bear-3x-etfs - retrieved 24 Dec 2022.  (Data rendered as an ISIN to prevent the bare CUSIP from being interpreted as scientific notation by most spreadsheet programs.)
+D0033-0005,,,US25460E2164,_,Direxion Daily Financial Bear 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.  (Data rendered as an ISIN to prevent the bare CUSIP from being interpreted as scientific notation by most spreadsheet programs.)
+D0033-0006,,,,25459Y694,Direxion Daily Financial Bull 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.
 D0115-0010,,Dimensional Inflation Protected Securities ETF,,,"No ISIN/CUSIP problems, but sub fund name started with ""Dimensionional""."
 D0115-0019,,,,25434V831,Dimensional US High Profitability ETF: mangled ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/duhp/us-high-profitability-etf - retrieved 24 Dec 2022.
 D0115-0026,,,,25434V740,Dimensional Emerging Markets Value ETF: incorrect ISIN in HMRC sheet.  Source: https://www.dimensional.com/us-en/funds/dfev/emerging-markets-value-etf - retrieved 24 Dec 2022.
@@ -13,10 +13,7 @@ G0080-0005,,,US37960A6698,,Global X SuperDividend ETF: incorrect ISIN in HMRC sh
 G0080-0010,,,US37954Y3190,,Global X MSCI Greece ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/GREK/ - retrieved 24 Dec 2022
 I0149-0011,,,US46138G4174,,Invesco MSCI North America Climate ETF: final two characters in ISIN transposed.  Source: https://www.invesco.com/us/financial-products/etfs/product-detail?audienceType=Advisor&ticker=KLMN - retrieved 10 Mar 2025.
 U0088-0001,Beyond Investing,,,,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
-V0015-0001,,Vanguard FTSE Developed Markets ETF,,,"No ISIN/CUSIP problems, but sub fund name was long and included the words “Tax-Managed” - fund prospectus doesn’t mention taxes outside the usual boilerplate language."
-V0016-0009,,Vanguard Mid-Cap Index Fund,,,"No ISIN/CUSIP problems, but sub fund name was a bit garbled: “Vanguard Mid-Cap Index Fund Vanguard Mid-Cap ETF”."
+V0015-0001,,Vanguard FTSE Developed Markets ETF,,,"No ISIN/CUSIP problems, but sub fund name was long and included the words ""Tax-Managed"" - fund prospectus doesn’t mention taxes outside the usual boilerplate language."
+V0016-0009,,Vanguard Mid-Cap Index Fund,,,"No ISIN/CUSIP problems, but sub fund name was a bit garbled: ""Vanguard Mid-Cap Index Fund Vanguard Mid-Cap ETF""."
 V0046-0033,,,US92189H6071,,VanEck Oil Services ETF: mangled ISIN in HMRC sheet.  Source: https://www.vaneck.com/us/en/investments/oil-services-etf-oih/ - retrieved 24 Dec 2022.
 W0065-0001,SPDR,Gold MiniShares,,,Overriding legal-entity name of the fund with the family/fund names generally used in marketing.
-
-
-.
