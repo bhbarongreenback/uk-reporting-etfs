@@ -1,6 +1,8 @@
 Share Class Ref,Parent Fund,Sub Fund,ISIN,CUSIP,Remarks
+A0636-0001,AllianceBernstein,,,,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0585-0001,Brown Advisory,,,,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0611-0001,Ark,21Shares Bitcoin ETF,,,Overriding legal-entity name of the fund with the family/fund names generally used in marketing.
+B0278-0005,,,_,09789C754,BondBloxx BBB Rated 1-5 Year Corporate Bond ETF: first two digits of CUSIP transposed.  Source: https://bondbloxxetf.com/BondBloxx-BBB-Rated-1-5-Year-Corporate-Bond-ETF/ - retrieved 9 December 2025.
 D0033-0005,,,US25460E2164,_,Direxion Daily Financial Bear 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.  (Data rendered as an ISIN to prevent the bare CUSIP from being interpreted as scientific notation by most spreadsheet programs.)
 D0033-0006,,,,25459Y694,Direxion Daily Financial Bull 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.
 D0115-0010,,Dimensional Inflation Protected Securities ETF,,,"No ISIN/CUSIP problems, but sub fund name started with ""Dimensionional""."
