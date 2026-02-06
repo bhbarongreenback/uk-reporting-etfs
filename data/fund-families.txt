@@ -1,3 +1,4 @@
+21Shares
 abrdn
 American Century
 BondBloxx
@@ -21,4 +22,5 @@ TCW
 T. Rowe Price
 VanEck
 Vanguard
+Vert
 WisdomTree
