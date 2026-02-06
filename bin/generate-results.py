@@ -116,7 +116,7 @@ def enhance_fund_data(funds, cusip_to_tickerinfo, fund_families,
             fund.category = fund_categories[fund.cusip]
         # Finally, clean up the fund name following a few rules...
         # Strip the fund family name from the start of the fund name
-        fund.fund_name = re.sub('^'+re.escape(fund.family)+r'\s+','',fund.fund_name, re.I)
+        fund.fund_name = re.sub('^'+re.escape(fund.family)+r'\b(?:,?\s*(?i:inc|ltd|plc)\.?)?\s+','',fund.fund_name, re.I)
         # If the fund name ends in a dash with a space immediately before
         # or after it, followed by some words including 'share', 'shares'
         # or 'class', strip anything after the dash
