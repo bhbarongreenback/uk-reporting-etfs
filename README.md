@@ -53,9 +53,11 @@ how often you'll need to interact with them:
   If the "parent fund name" in the HMRC sheet begins with one of the fund family names from this file,
   use this shorter name instead, rather than the longer legal entity name from the HMRC sheet.
 - [`data/errata.csv`](data/errata.csv) - The HMRC data sheet is known to contain erroneous data.
-  The "Share Class Ref" column is used as the key to match against rows in the original sheet; non-blank columns
-  in the errata file override the values in the corresponding columns of the HMRC sheet.
-
+  The "Share Class Ref" column is used as the key to match against rows in the original sheet;
+  the "Field" column specifies which value should be overridden; the "New Value" column gives the
+  corrected value; "Old Value" column gives the expected erroneous value.  (The script will fail with
+  an error if an unexpected value is found in the HMRC sheet - this ensures that the errata file
+  does not mask possibly relevant changes in the underlying data.)
 
 # Intermediate result files and scripts
 
