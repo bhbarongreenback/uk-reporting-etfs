@@ -34,7 +34,7 @@ _HEADER_NAME            = 'Name'
 _HEADER_FIGI            = 'FIGI'
 _HEADER_EXCHANGE        = 'Exchange'
 
-_REGEXP_CUSIP           = re.compile(r'\bCUSIP\b')
+REGEXP_CUSIP            = re.compile(r'\bCUSIP\b')
 # more permissive to allow DTCC data to be used for TickerInfo instead of OpenFIGI
 _REGEXP_TICKER          = re.compile(r'\b(?:ticker|symbol)\b', re.IGNORECASE)
 _REGEXP_NAME            = re.compile(r'\b(?:name|description)\b', re.IGNORECASE)
@@ -54,7 +54,7 @@ def read_tickerinfo_csv(filelike):
         # in the process figuring out which column each of the data items is in
         if cusip_column is None:
             ticker_column = column_matching(row, _REGEXP_TICKER)
-            cusip_column = column_matching(row, _REGEXP_CUSIP)
+            cusip_column = column_matching(row, REGEXP_CUSIP)
             name_column = column_matching(row, _REGEXP_NAME)
             figi_column = column_matching(row, _REGEXP_FIGI)
             exchange_column = column_matching(row, _REGEXP_EXCHANGE)
@@ -115,9 +115,9 @@ _HEADER_TO_DATE         = 'Ceased'
 _HEADER_CATEGORY        = 'Category'
 
 _REGEXP_SHARE_CLASS_REF = re.compile(r'\bshare\s+class\s+ref', re.IGNORECASE)
-_REGEXP_FAMILY          = re.compile(r'\bparent\s+fund\b', re.IGNORECASE)
-_REGEXP_FUND_NAME       = re.compile(r'\bsub\W+fund\b', re.IGNORECASE)
-_REGEXP_ISIN            = re.compile(r'\bISIN\b')
+REGEXP_FAMILY           = re.compile(r'\bparent\s+fund\b', re.IGNORECASE)
+REGEXP_FUND_NAME        = re.compile(r'\bsub\W+fund\b', re.IGNORECASE)
+REGEXP_ISIN             = re.compile(r'\bISIN\b')
 _REGEXP_FROM_DATE       = re.compile(r'\bwith\s+effect\s+from\b', re.IGNORECASE)
 _REGEXP_TO_DATE         = re.compile(r'\bceased\b', re.IGNORECASE)
 _REGEXP_CATEGORY        = re.compile(r'\bcategory\b', re.IGNORECASE)
@@ -135,10 +135,10 @@ def read_fundinfo_csv(filelike, need_all_columns=True):
         # in the process figuring out which column each of the data items is in
         if ref_column is None:
             ref_column = column_matching(row, _REGEXP_SHARE_CLASS_REF)
-            parent_column = column_matching(row, _REGEXP_FAMILY)
-            sub_column = column_matching(row, _REGEXP_FUND_NAME)
-            isin_column = column_matching(row, _REGEXP_ISIN)
-            cusip_column = column_matching(row, _REGEXP_CUSIP)
+            parent_column = column_matching(row, REGEXP_FAMILY)
+            sub_column = column_matching(row, REGEXP_FUND_NAME)
+            isin_column = column_matching(row, REGEXP_ISIN)
+            cusip_column = column_matching(row, REGEXP_CUSIP)
             from_column = column_matching(row, _REGEXP_FROM_DATE)
             to_column = column_matching(row, _REGEXP_TO_DATE)
             ticker_column = column_matching(row, _REGEXP_TICKER)
@@ -198,4 +198,47 @@ def write_fundinfo_csv(filelike, fundinfos, include_enhanced_columns=False):
         header += (_HEADER_TICKER, _HEADER_CATEGORY, _HEADER_FIGI)
     csv_out.writerow(header)
     csv_out.writerows(map(lambda f: fundinfo_to_csv_row(f, include_enhanced_columns), fundinfos))
+
+
+_REGEXP_FIELD     = re.compile(r'\bField\b', re.IGNORECASE)
+_REGEXP_OLD_VALUE = re.compile(r'\bOld\W*Value\b', re.IGNORECASE)
+_REGEXP_NEW_VALUE = re.compile(r'\bNew\W*Value\b', re.IGNORECASE)
+
+@dataclasses.dataclass
+class Erratum:
+    share_class_ref: str
+    field: str
+    old_value: str
+    new_value: str
+
+def read_errata_csv(filelike, need_all_columns=True):
+    ref_column = field_column = old_value_column = new_value_column = None
+
+    result_count = 0
+    csv_in = csv.reader(filelike)
+    for row in csv_in:
+        # If we haven't encountered the header row yet, try to match it -
+        # in the process figuring out which column each of the data items is in
+        if ref_column is None:
+            ref_column = column_matching(row, _REGEXP_SHARE_CLASS_REF)
+            field_column = column_matching(row, _REGEXP_FIELD)
+            old_value_column = column_matching(row, _REGEXP_OLD_VALUE)
+            new_value_column = column_matching(row, _REGEXP_NEW_VALUE)
+            continue
+        if field_column is None or old_value_column is None or new_value_column is None:
+            raise Exception('input file missing one or more data columns: ' + filelike.name)
+
+        share_class_ref = safe_get_column(ref_column, row)
+        if not share_class_ref:
+            continue
+        yield Erratum(
+            share_class_ref=share_class_ref,
+            field=safe_get_column(field_column, row),
+            old_value=safe_get_column(old_value_column, row),
+            new_value=safe_get_column(new_value_column, row))
+        result_count += 1
+
+    if ref_column is None:
+        raise Exception('no "share class ref" column in input file: ' + filelike.name)
+    _LOGGER_.info('input rows read: %d, filename: %s' % (result_count, filelike.name))
 

@@ -36,7 +36,7 @@ build/hmrc-data-url.txt: build/hmrc-data-page.html
 	###
 	### parsing HMRC data page to get download URL for HMRC data spreadsheet
 	###
-	$(SED) -nre 's/^.*<a [^<]*href=(["'"'"'])(.*\.(xlsx?|ods))\1.*$$/\2/p' < $< | head -n 1 > $@
+	$(SED) -nre 's/^.*<a [^<]*href=["'"'"'](.*\.(xlsx?|ods))["'"'"'].*$$/\1/p' < $< | head -n 1 > $@
 	[ -s $@ ] || ( rm $@ ; false )
 
 build/hmrc-raw-data.bin: build/hmrc-data-url.txt

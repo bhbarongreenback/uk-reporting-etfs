@@ -9,7 +9,7 @@ from _logging import _LOGGER_, configure_logger
 OPENFIGI_ENDPOINT_URL = 'https://api.openfigi.com/v3/mapping'
 '''Default URL of the OpenFIGI mapping endpoint.'''
 
-OPENFIGI_CALLS_PER_MINUTE_WITHOUT_KEY = 25
+OPENFIGI_CALLS_PER_MINUTE_WITHOUT_KEY = 20
 '''Default OpenFIGI call rate limit when an API key is not used.'''
 
 OPENFIGI_CALLS_PER_MINUTE_WITH_KEY = 250
