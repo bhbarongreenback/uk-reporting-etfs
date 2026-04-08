@@ -21,14 +21,12 @@ SHEET_EXT      = $(shell $(SED) -e 's/^.*\.//' < build/hmrc-data-url.txt)
 
 all: build/wiki-main.txt build/wiki-secondary.txt diff
 
-build:
-	mkdir -p build
-
-build/hmrc-data-page.html: build
+build/hmrc-data-page.html:
 	@echo
 	###
 	### fetching HMRC data page
 	###
+	mkdir -p build
 	$(WGET) -O $@ "$(HMRC_SHEET_URL)"
 
 build/hmrc-data-url.txt: build/hmrc-data-page.html
@@ -45,6 +43,7 @@ build/hmrc-raw-data.bin: build/hmrc-data-url.txt
 	### downloading latest HMRC data spreadsheet
 	###
 	$(WGET) -O $@ $(file <build/hmrc-data-url.txt)
+	( [ -s $@ ] && touch $@ ) || ( rm $@ ; false )
 	( cd build ; ln -fs hmrc-raw-data.bin hmrc-raw-data.$(SHEET_EXT) )
 
 build/hmrc-raw-data.csv: build/hmrc-raw-data.bin build/hmrc-data-url.txt bin/convert-sheet.py
@@ -74,11 +73,12 @@ build/openfigi-data.csv: build/hmrc-data.csv bin/call-openfigi.py
 	###
 	$(PYTHON3) bin/call-openfigi.py $(VERBOSITY) $(OPENFIGI_OPTS) -c -o $@ build/hmrc-data.csv
 
-build/uncategorized-funds.csv: data/fund-categories.csv build
+build/uncategorized-funds.csv: data/fund-categories.csv
 	@echo
 	###
 	### generating "uncategorized funds" list
 	###
+	mkdir -p build
 	$(SED) -r '/.........,/{s/,$$/,,/;s/,[^,]+$$/,/;s/,,$$/,Excluded funds/}' < $< > $@
 	[ -s $@ ] || ( rm $@ ; false )
 
