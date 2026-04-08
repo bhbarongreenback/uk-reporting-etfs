@@ -13,12 +13,13 @@ _REGEXP_DATE_DDMMYYYY = re.compile(r'(?:0[1-9]|[12]\d|3[01])/(?:0[1-9]|1[0-2])/\
 
 
 def _apply_erratum(erratum, old_value):
+    is_err = False
     if erratum.new_value == old_value:
         _LOGGER_.info('redundant erratum for field "%s" on fund ref %s' % (erratum.field, erratum.share_class_ref))
     elif erratum.old_value != old_value:
         _LOGGER_.error('unexpected value for field "%s" on fund ref %s: erratum expects "%s", found "%s"' % (erratum.field, erratum.share_class_ref, erratum.old_value, old_value))
-        sys.exit(1)
-    return erratum.new_value
+        is_err = True
+    return erratum.new_value, is_err
 
 
 def sheet_to_fund_info(hmrc_sheet_filelike, errata):
@@ -31,6 +32,7 @@ def sheet_to_fund_info(hmrc_sheet_filelike, errata):
     _LOGGER_.info('start processsing HMRC spreadsheet contents')
 
     fund_count = 0
+    has_errors = False
     for fund in read_fundinfo_csv(hmrc_sheet_filelike, True):
         # If the fund is mentioned in the errata file, override data in
         # the HMRC sheet with any non-blank values from the errata file
@@ -38,17 +40,21 @@ def sheet_to_fund_info(hmrc_sheet_filelike, errata):
             fund_errata = errata[fund.share_class_ref]
             for erratum in fund_errata:
                 if REGEXP_FAMILY.match(erratum.field):
-                    fund.family = _apply_erratum(erratum, fund.family)
+                    fund.family, is_err = _apply_erratum(erratum, fund.family)
+                    has_errors |= is_err
                 elif REGEXP_FUND_NAME.match(erratum.field):
-                    fund.fund_name = _apply_erratum(erratum, fund.fund_name)
+                    fund.fund_name, is_err = _apply_erratum(erratum, fund.fund_name)
+                    has_errors |= is_err
                 elif REGEXP_ISIN.match(erratum.field):
-                    fund.isin = _apply_erratum(erratum, fund.isin)
+                    fund.isin, is_err = _apply_erratum(erratum, fund.isin)
+                    has_errors |= is_err
                 elif REGEXP_CUSIP.match(erratum.field):
-                    fund.cusip = _apply_erratum(erratum, fund.cusip)
+                    fund.cusip, is_err = _apply_erratum(erratum, fund.cusip)
+                    has_errors |= is_err
                 else:
                     _LOGGER_.error('unknown field name "%s" in erratum for fund %s' % (erratum.field, erratum.share_class_ref))
                     _LOGGER_.debug('erratum detail: %r' % erratum)
-                    sys.exit(1)
+                    has_errors = True
         # ...then perform various data checks/cleanups:
         if fund.cusip is not None:
             fund.cusip = _REGEXP_NOT_ALNUM.sub('', fund.cusip.strip().upper())
@@ -90,7 +96,9 @@ def sheet_to_fund_info(hmrc_sheet_filelike, errata):
         yield fund
         fund_count += 1
     _LOGGER_.info('finish processsing HMRC spreadsheet contents (%d candidates found)' % fund_count)
-
+    if has_errors:
+        _LOGGER_.error('terminating early as errata sheet contains errors')
+        sys.exit(1)
 
 def merge_errata(*errata_filelikes):
     _LOGGER_.info('start reading errata')
