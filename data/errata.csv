@@ -6,7 +6,11 @@ A0438-0001,CUSIP,3264108,"003264108",leading zeroes being stripped from CUSIP in
 A0585-0001,Parent Fund,Advisors Inner Circle Fund (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0611-0001,Parent Fund,ARK 21Shares Bitcoin ETF,21Shares,
 A0611-0001,Sub Fund,Share class,Bitcoin ETF,
+A0612-0001,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
+A0612-0002,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0612-0003,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
+A0612-0004,ISIN,US00775Y5Y2494,US00775Y2494,
+A0612-0004,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0636-0001,Parent Fund,"AB Active ETFs, Inc.",AllianceBernstein,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 B0278-0005,ISIN,US90789C7544,US09789C7544,BondBloxx BBB Rated 1-5 Year Corporate Bond ETF: first two digits of CUSIP transposed.  Source: https://bondbloxxetf.com/BondBloxx-BBB-Rated-1-5-Year-Corporate-Bond-ETF/ - retrieved 9 December 2025.
 D0033-0005,CUSIP,25459W 144,"25460E216",Direxion Daily Financial Bear 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.

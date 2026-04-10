@@ -7,6 +7,9 @@ CUSIP,Category
 003264108,
 00326A104,Gold
 00774Q197,
+00775Y249,
+00775Y264,
+00775Y272,
 00775Y322,
 00775Y355,
 00775Y710,
@@ -298,6 +301,7 @@ CUSIP,Category
 464288679,Fixed income: United States
 464288687,Fixed income: United States
 464288737,
+464288760,
 46429B747,Fixed income: United States
 46432F339,Equities: United States
 46432F388,Equities: United States
@@ -316,6 +320,7 @@ CUSIP,Category
 46435U853,Fixed income: United States
 46438F101,
 46438R105,
+500767215,
 500767306,
 500767678,
 500767694,
