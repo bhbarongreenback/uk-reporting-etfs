@@ -9,7 +9,6 @@ A0611-0001,Sub Fund,Share class,Bitcoin ETF,
 A0612-0001,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0612-0002,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0612-0003,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
-A0612-0004,ISIN,US00775Y5Y2494,US00775Y2494,
 A0612-0004,Parent Fund,Advisors Inner Circle Fund III (The),Brown Advisory,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 A0636-0001,Parent Fund,"AB Active ETFs, Inc.",AllianceBernstein,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
 B0278-0005,ISIN,US90789C7544,US09789C7544,BondBloxx BBB Rated 1-5 Year Corporate Bond ETF: first two digits of CUSIP transposed.  Source: https://bondbloxxetf.com/BondBloxx-BBB-Rated-1-5-Year-Corporate-Bond-ETF/ - retrieved 9 December 2025.
@@ -31,6 +30,7 @@ T0271-0001,Parent Fund,21Shares FTSE Crypto 10 ex-BTC Index ETF,21Shares,
 T0271-0001,Sub Fund,Share class,FTSE Crypto 10 ex-BTC Index ETF,
 T0272-0001,Parent Fund,21Shares 2x Long Dogecoin ETF,21Shares,
 T0272-0001,Sub Fund,Share class,2x Long Dogecoin ETF,
+T0273-0001,ISIN,US53656G1673,US53656H5871
 T0273-0001,Parent Fund,21Shares 2x Long Sui ETF,21Shares,
 T0273-0001,Sub Fund,Share class,2x Long Sui ETF,
 U0088-0001,Parent Fund,US Vegan Climate ETF,Beyond Investing,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
