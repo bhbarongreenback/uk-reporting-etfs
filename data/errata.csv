@@ -18,6 +18,7 @@ D0115-0010,Sub Fund,Dimensionional Inflation Protected Securities ETF,Dimensiona
 D0115-0041,CUSIP,25434F575,25434V575,Dimensional Global ex US Core Fixed Income ETF: incorrect CUSIP in HMRC sheet: Source: https://www.dimensional.com/us-en/funds/dfgx/global-ex-us-core-fixed-income-etf
 G0080-0005,ISIN,US37950E5490,US37960A6698,Global X SuperDividend ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/sdiv/ - retrieved 24 Dec 2022.
 G0080-0010,ISIN,US37950E3669,US37954Y3190,Global X MSCI Greece ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/GREK/ - retrieved 24 Dec 2022
+G0280-0001,Sub Fund,Shares,Solana Trust,
 T0267-0001,Parent Fund,21Shares Ethereum ETF,21Shares,
 T0267-0001,Sub Fund,Share class,Ethereum ETF,
 T0268-0001,Parent Fund,21Shares XRP ETF,21Shares,
@@ -28,10 +29,10 @@ T0270-0001,Parent Fund,21Shares FTSE Crypto 10 Index ETF,21Shares,
 T0270-0001,Sub Fund,Share class,FTSE Crypto 10 Index ETF,
 T0271-0001,Parent Fund,21Shares FTSE Crypto 10 ex-BTC Index ETF,21Shares,
 T0271-0001,Sub Fund,Share class,FTSE Crypto 10 ex-BTC Index ETF,
-T0272-0001,ISIN,US53656G1756,US53656H5533
+T0272-0001,ISIN,US53656G1756,US53656H5533,
 T0272-0001,Parent Fund,21Shares 2x Long Dogecoin ETF,21Shares,
 T0272-0001,Sub Fund,Share class,2x Long Dogecoin ETF,
-T0273-0001,ISIN,US53656G1673,US53656H5871
+T0273-0001,ISIN,US53656G1673,US53656H5871,
 T0273-0001,Parent Fund,21Shares 2x Long Sui ETF,21Shares,
 T0273-0001,Sub Fund,Share class,2x Long Sui ETF,
 U0088-0001,Parent Fund,US Vegan Climate ETF,Beyond Investing,Overriding legal-entity name of the parent fund with the fund family name generally used in marketing.
