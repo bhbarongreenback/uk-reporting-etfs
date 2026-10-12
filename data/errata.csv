@@ -14,11 +14,20 @@ A0636-0001,Parent Fund,"AB Active ETFs, Inc.",AllianceBernstein,Overriding legal
 B0278-0005,ISIN,US90789C7544,US09789C7544,BondBloxx BBB Rated 1-5 Year Corporate Bond ETF: first two digits of CUSIP transposed.  Source: https://bondbloxxetf.com/BondBloxx-BBB-Rated-1-5-Year-Corporate-Bond-ETF/ - retrieved 9 December 2025.
 D0033-0005,CUSIP,25459W 144,"25460E216",Direxion Daily Financial Bear 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.
 D0033-0006,CUSIP,25459W 516,25459Y694,Direxion Daily Financial Bull 3x Shares: CUSIP differs from that used in HMRC sheet.  Source: https://www.dtcc.com/charts/exchange-traded-funds (CUSIP from fund company site doesn't match data in OpenFIGI) - retrieved 9 Oct 2025.
+D0115-0004,ISIN,US25434V7082,US25239Y2129,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
+D0115-0007,ISIN,US25434V5003,US25239Y1881,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
+D0115-0009,ISIN,US25434V6092,US25239Y1626,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
 D0115-0010,Sub Fund,Dimensionional Inflation Protected Securities ETF,Dimensional Inflation Protected Securities ETF,"No ISIN/CUSIP problems, but sub fund name started with ""Dimensionional""."
+D0115-0018,ISIN,US25434V8155,US25239Y1709,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
+D0115-0019,ISIN,US25434V8312,US25239Y1964,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
+D0115-0020,ISIN,US25434V8239,US25239Y1477,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
+D0115-0037,ISIN,US25434V6258,US25239Y2202,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
 D0115-0041,CUSIP,25434F575,25434V575,Dimensional Global ex US Core Fixed Income ETF: incorrect CUSIP in HMRC sheet: Source: https://www.dimensional.com/us-en/funds/dfgx/global-ex-us-core-fixed-income-etf
+D0115-0043,ISIN,US25434V5599,US25239Y1543,CUSIP change as ETF is now an alternate share class of the mutual fund. Source: https://www.dimensional.com/chmedia/521500/source/download/recently-completed-mergers.pdf
 G0080-0005,ISIN,US37950E5490,US37960A6698,Global X SuperDividend ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/sdiv/ - retrieved 24 Dec 2022.
 G0080-0010,ISIN,US37950E3669,US37954Y3190,Global X MSCI Greece ETF: incorrect ISIN in HMRC sheet.  Source: https://www.globalxetfs.com/funds/GREK/ - retrieved 24 Dec 2022
 G0280-0001,Sub Fund,Shares,Solana Trust,
+I0172-0001,ISIN,US46438R1059,US46438R2040,
 T0267-0001,Parent Fund,21Shares Ethereum ETF,21Shares,
 T0267-0001,Sub Fund,Share class,Ethereum ETF,
 T0268-0001,Parent Fund,21Shares XRP ETF,21Shares,

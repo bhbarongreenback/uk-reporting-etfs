@@ -68,3 +68,10 @@ def make_isin_from_cusip(cusip):
     at the end).
     '''
     return 'US' + cusip + isin_check_digit('US' + cusip)
+
+
+if __name__ == '__main__':
+    import sys
+    for i in sys.argv[1:]:
+        print(make_isin_from_cusip(i))
+

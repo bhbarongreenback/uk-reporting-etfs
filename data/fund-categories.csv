@@ -21,6 +21,7 @@ CUSIP,Category
 025072604,Equities: global/non-US
 025072687,Fixed income: global/non-US
 025072703,Equities: global/non-US
+025072802,Equities: global/non-US
 025072877,Equities: United States
 025072885,Equities: United States
 04071F102,
@@ -31,22 +32,26 @@ CUSIP,Category
 09789C788,Fixed income: United States
 09789C812,Fixed income: United States
 09789C861,Fixed income: United States
+25239Y147,Real estate
+25239Y154,Equities: United States
+25239Y162,Equities: United States
+25239Y170,Equities: United States
+25239Y188,Equities: United States
+25239Y196,Equities: United States
+25239Y212,Equities: United States
+25239Y220,Equities: United States
 25434V104,Equities: United States
 25434V203,Equities: global/non-US
 25434V302,Equities: global/non-US
 25434V401,Equities: United States
-25434V500,Equities: United States
 25434V526,Equities: United States
 25434V534,Equities: global/non-US
 25434V542,Equities: global/non-US
-25434V559,Equities: United States
 25434V567,Fixed income: global/non-US
 25434V575,Fixed income: global/non-US
 25434V583,Fixed income: global/non-US
 25434V591,Fixed income: United States
-25434V609,Equities: United States
 25434V617,Equities: global/non-US
-25434V625,Equities: United States
 25434V633,Fixed income: United States
 25434V641,Equities: United States
 25434V658,Real estate
@@ -54,7 +59,6 @@ CUSIP,Category
 25434V674,Fixed income: global/non-US
 25434V682,Equities: global/non-US
 25434V690,Equities: global/non-US
-25434V708,Equities: United States
 25434V716,Equities: United States
 25434V724,Equities: United States
 25434V732,Equities: global/non-US
@@ -65,9 +69,6 @@ CUSIP,Category
 25434V781,Equities: global/non-US
 25434V799,Equities: global/non-US
 25434V807,Equities: global/non-US
-25434V815,Equities: United States
-25434V823,Real estate
-25434V831,Equities: United States
 25434V849,Fixed income: United States
 25434V856,Fixed income: United States
 25434V864,Fixed income: global/non-US
@@ -218,7 +219,10 @@ CUSIP,Category
 33740F755,
 33740F763,
 33740F771,
+33740F797,
 33740F805,
+33740F813,
+33740F821,
 33740F839,
 33740F847,
 33740F854,
@@ -240,6 +244,7 @@ CUSIP,Category
 33741L207,
 33741X102,
 33741X201,
+33744U204,
 35473P207,
 37950E291,
 37950E341,
@@ -326,7 +331,7 @@ CUSIP,Category
 46435U853,Fixed income: United States
 46438F101,
 46438M106,
-46438R105,
+46438R204,
 500767215,
 500767306,
 500767678,
