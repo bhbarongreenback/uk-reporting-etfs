@@ -33,7 +33,7 @@ def write_wiki_output(funds, output):
         for fund in funds:
             if fund.category == category:
                 output.write('|-\n| ' + ' || '.join([
-                    '[https://etf.com/%s %s]' % (fund.ticker, fund.ticker),
+                    '[https://etfdb.com/etf/%s/ %s]' % (fund.ticker, fund.ticker),
                     mediawiki_escape(fund.family),
                     mediawiki_escape(fund.fund_name),
                     '<span title="ISIN: %s">%s</span>' % (fund.isin, fund.isin[2:11]),
